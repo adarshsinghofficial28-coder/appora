@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appora — Welcome</title>
+  <meta name="description" content="Welcome to Appora. Discover apps. Find your tools." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --w-primary: #4F46E5;
+      --w-primary-hover: #4338CA;
+      --w-foreground: #1E293B;
+      --w-muted: #475569;
+      --w-background: #F8FAFC;
+      --w-card: #FFFFFF;
+      --w-border: #E2E8F0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--w-background);
+      color: var(--w-foreground);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Scene + ambient glow */
+    .welcome-scene {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .welcome-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .welcome-blob-1 {
+      width: 360px;
+      height: 360px;
+      background: var(--w-primary);
+      top: -80px;
+      left: -80px;
+      animation: blobFloat 8s ease-in-out infinite alternate;
+    }
+
+    .welcome-blob-2 {
+      width: 300px;
+      height: 300px;
+      background: #EA580C;
+      bottom: -100px;
+      right: -60px;
+      animation: blobFloat 10s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes blobFloat {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(40px, 30px) scale(1.1); }
+    }
+
+    .welcome-card {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 3rem 2.5rem;
+      width: min(460px, calc(100vw - 2rem));
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 24px;
+      box-shadow: 0 24px 60px rgba(30, 41, 59, 0.12);
+    }
+
+    /* Logo */
+    .welcome-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .welcome-mark {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: url('appora-mark.svg') center / cover no-repeat;
+      display: inline-block;
+      box-shadow: 0 12px 28px rgba(79, 70, 229, 0.35);
+      animation: markIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes markIn {
+      0% { transform: scale(0.4) rotate(-12deg); opacity: 0; }
+      60% { transform: scale(1.05) rotate(2deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0); opacity: 1; }
+    }
+
+    .welcome-wordmark {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: inline-flex;
+      overflow: hidden;
+    }
+
+    .welcome-wordmark span {
+      display: inline-block;
+      transform: translateY(110%);
+      animation: wordUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: var(--d);
+    }
+
+    @keyframes wordUp {
+      to { transform: translateY(0); }
+    }
+
+    .welcome-tagline {
+      color: var(--w-muted);
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.9s forwards;
+    }
+
+    /* Progress bar */
+    .welcome-progress {
+      width: 100%;
+      height: 4px;
+      border-radius: 99px;
+      background: var(--w-border);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .welcome-progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #4F46E5, #6366F1);
+      animation: progressGrow 1.9s cubic-bezier(0.65, 0, 0.35, 1) 0.25s forwards;
+    }
+
+    @keyframes progressGrow {
+      to { width: 100%; }
+    }
+
+    .welcome-actions {
+      display: flex;
+      justify-content: center;
+    }
+
+    .welcome-enter {
+      font-family: inherit;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--w-primary);
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 12px;
+      cursor: pointer;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 2s forwards;
+      transition: background-color 200ms ease, transform 200ms ease;
+    }
+
+    .welcome-enter:hover {
+      background: var(--w-primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .welcome-enter:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.35);
+    }
+
+    .welcome-skip {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 2;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--w-muted);
+      background: transparent;
+      border: 1px solid var(--w-border);
+      padding: 0.5rem 1.25rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: color 200ms ease, border-color 200ms ease;
+    }
+
+    .welcome-skip:hover {
+      color: var(--w-primary);
+      border-color: var(--w-primary);
+    }
+
+    .welcome-skip:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.35);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Reduced motion: show static content, no auto animation timing issues */
+    @media (prefers-reduced-motion: reduce) {
+      .welcome-mark,
+      .welcome-wordmark span,
+      .welcome-tagline,
+      .welcome-progress-bar,
+      .welcome-enter {
+        animation: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+        width: 100% !important;
+      }
+
+      .welcome-blob {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="welcome-scene">
+    <div class="welcome-blob welcome-blob-1" aria-hidden="true"></div>
+    <div class="welcome-blob welcome-blob-2" aria-hidden="true"></div>
+
+    <div class="welcome-card" role="main" aria-label="Welcome to Appora">
+      <div class="welcome-logo">
+        <div class="welcome-mark" aria-hidden="true"></div>
+        <div class="welcome-wordmark" aria-label="Appora">
+          <span style="--d: 0.55s">A</span><span style="--d: 0.62s">p</span><span style="--d: 0.69s">p</span><span style="--d: 0.76s">o</span><span style="--d: 0.83s">r</span><span style="--d: 0.9s">a</span>
+        </div>
+      </div>
+
+      <p class="welcome-tagline">Discover Apps. Find Your Tools.</p>
+
+      <div class="welcome-progress" aria-hidden="true">
+        <div class="welcome-progress-bar"></div>
+      </div>
+
+      <div class="welcome-actions">
+        <button class="welcome-enter" id="enterBtn" type="button">Enter Appora</button>
+      </div>
+    </div>
+
+    <button class="welcome-skip" id="skipBtn" type="button">Skip</button>
+  </main>
+
+  <script>
+    const goHome = () => { window.location.href = '/home'; };
+
+    document.getElementById('enterBtn').addEventListener('click', goHome);
+    document.getElementById('skipBtn').addEventListener('click', goHome);
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const delay = reduceMotion ? 1200 : 3000;
+
+    const timer = setTimeout(goHome, delay);
+
+    // Stop auto-redirect if the user starts interacting (they've taken control)
+    document.addEventListener('pointerdown', () => clearTimeout(timer), { once: true });
+    document.addEventListener('keydown', () => clearTimeout(timer), { once: true });
+  </script>
+  <script src="security.js"></script>
+</body>
+</html>

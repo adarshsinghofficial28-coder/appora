@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appora — Dashboard</title>
+  <meta name="description" content="Your saved apps and recent activity on Appora." />
+  <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.0.2/dist/phosphor.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-background">
+    <div class="preloader" id="preloader" role="status" aria-label="Loading Appora">
+    <div class="preloader-inner">
+      <div class="preloader-ring" aria-hidden="true"></div>
+      <span class="preloader-logo" aria-hidden="true"></span>
+      <span class="preloader-brand">Appora</span>
+      <span class="preloader-hint">Loading&hellip;</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="/home" class="logo" aria-label="Appora home">
+          <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+          <span class="font-extrabold text-xl text-foreground">Appora</span>
+        </a>
+        <nav class="main-nav" aria-label="Main">
+          <a href="/home" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Home</a>
+          <a href="/browse" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Browse</a>
+          <a href="/pricing" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Pricing</a>
+        </nav>
+        <div class="header-actions">
+          <span class="auth-links" id="authLinks">
+            <a href="/login" class="btn-ghost text-sm">Sign In</a>
+            <a href="/signup" class="btn-primary text-sm">Get Started</a>
+          </span>
+          <span class="auth-user" id="authUser" hidden>
+            <a href="/dashboard" class="btn-ghost text-sm"><phosphor-icon name="user" size="16"></phosphor-icon> <span id="userName">Account</span></a>
+            <button class="btn-ghost text-sm" id="signOutBtn">Sign Out</button>
+          </span>
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+            <phosphor-icon name="list" size="24"></phosphor-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Main navigation">
+    <div class="mobile-menu-header">
+      <span class="font-bold text-lg">Appora</span>
+      <button class="icon-button" id="closeMobileMenu" aria-label="Close menu">
+        <phosphor-icon name="x" size="24"></phosphor-icon>
+      </button>
+    </div>
+    <div class="mobile-nav">
+      <a href="/home">Home</a>
+      <a href="/browse">Browse</a>
+      <a href="/pricing">Pricing</a>
+      <hr style="border-color: var(--color-border); margin: 1rem 0;" />
+      <a href="/login" class="btn-secondary text-sm">Sign In</a>
+      <a href="/signup" class="btn-primary text-sm">Get Started</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Sign-in gate -->
+    <div class="dashboard-gate" id="dashboardGate" hidden>
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1>Sign in to view your dashboard</h1>
+          <p class="text-sm text-muted-foreground">Your saved apps and recent activity live here. Sign in to continue.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <a href="/login" class="btn-primary">Sign In</a>
+          <a href="/signup" class="btn-secondary">Create Account</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard content -->
+    <div id="dashboardContent" hidden>
+      <section class="dashboard-hero">
+        <div class="container">
+          <div class="dashboard-hero-content">
+            <h1 class="dashboard-hero-title" id="greeting">Your dashboard</h1>
+            <p class="dashboard-hero-subtitle">Your saved apps and recent activity, in one place.</p>
+            <div class="dashboard-hero-actions">
+              <button class="btn-primary" id="addToDashboardBtn" aria-label="Add app to dashboard">
+                <phosphor-icon name="plus" size="18"></phosphor-icon>
+                Add app
+              </button>
+              <a href="/browse" class="btn-secondary">Browse directory</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-section">
+        <div class="container">
+          <div class="dashboard-section-header">
+            <h2 class="dashboard-section-title">Saved apps</h2>
+          </div>
+          <div class="dashboard-saved-grid" id="dashboardSavedGrid"></div>
+        </div>
+      </section>
+
+      <section class="dashboard-section">
+        <div class="container">
+          <div class="dashboard-section-header">
+            <h2 class="dashboard-section-title">Recent activity</h2>
+          </div>
+          <div class="dashboard-table-wrap">
+            <table class="dashboard-table">
+              <thead>
+                <tr>
+                  <th>App</th>
+                  <th>Category</th>
+                  <th>Action</th>
+                  <th>Updated</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardActivityBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-card border-top" style="border-top: 1px solid var(--color-border);">
+    <div class="container" style="padding: 3rem 0;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+        <div>
+          <div class="logo" style="margin-bottom: 1rem;">
+            <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+            <span class="font-extrabold text-xl">Appora</span>
+          </div>
+          <p class="text-sm text-muted-foreground">Discover Apps. Find Your Tools.</p>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Product</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/home" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Home page">Home</a></li>
+            <li><a href="/browse" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Browse all apps">Browse</a></li>
+            <li><a href="/pricing" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="View pricing information">Pricing</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Company</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Sign in to your account">Login</a></li>
+            <li><a href="/dashboard" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="View your dashboard">Dashboard</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Support</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Help center documentation">Help Center</a></li>
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Contact support team">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="text-sm text-muted-foreground" style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);">
+        &copy; 2024 Appora. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script src="security.js"></script>
+  <script src="auth.js"></script>
+
+  <script>
+    const STORAGE_KEY = 'appora_apps';
+    const defaultApps = [
+      { id: 1, name: 'Linear', url: 'https://linear.app', desc: 'Track and ship work across the software development life cycle.', rating: 4.8, category: 'Productivity', tag: 'paid', platforms: ['web'], status: 'live' },
+      { id: 2, name: 'Figma', url: 'https://figma.com', desc: 'Design, prototype, and share user experiences faster.', rating: 4.7, category: 'Design', tag: 'free', platforms: ['web'], status: 'live' },
+      { id: 3, name: 'Cursor', url: 'https://cursor.sh', desc: 'The IDE built for pair-programming with AI.', rating: 4.9, category: 'Development', tag: 'paid', platforms: ['mac', 'win', 'linux'], status: 'live' },
+      { id: 4, name: 'Notion', url: 'https://notion.so', desc: 'One workspace for writing, planning, and organizing.', rating: 4.6, category: 'Productivity', tag: 'free', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 5, name: 'Postman', url: 'https://postman.com', desc: 'API development and testing platform.', rating: 4.5, category: 'Development', tag: 'paid', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 6, name: 'Framer', url: 'https://framer.com', desc: 'Interactive web design tool with AI assistance.', rating: 4.3, category: 'Design', tag: 'free', platforms: ['web'], status: 'live' },
+      { id: 7, name: 'Replit', url: 'https://replit.com', desc: 'Collaborative browser-based IDE.', rating: 4.4, category: 'Development', tag: 'open-source', platforms: ['web'], status: 'live' },
+      { id: 8, name: 'Discord', url: 'https://discord.com', desc: 'Chat platform for communities and teams.', rating: 4.2, category: 'Communication', tag: 'free', platforms: ['web', 'mac', 'win', 'ios', 'android'], status: 'live' },
+      { id: 9, name: 'Trello', url: 'https://trello.com', desc: 'Visual board-based project management tool.', rating: 4.1, category: 'Productivity', tag: 'free', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 10, name: 'Canva', url: 'https://canva.com', desc: 'Create stunning designs for social media and print.', rating: 4.4, category: 'Design', tag: 'free', platforms: ['web', 'mac', 'win'], status: 'live' },
+      { id: 11, name: 'GitHub Copilot', url: 'https://github.com/features/copilot', desc: 'AI pair programmer for faster coding.', rating: 4.6, category: 'Development', tag: 'paid', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 12, name: 'Slack', url: 'https://slack.com', desc: 'Team collaboration and messaging platform.', rating: 4.3, category: 'Communication', tag: 'paid', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 13, name: 'Zoom', url: 'https://zoom.us', desc: 'Video conferencing and online meetings.', rating: 4.0, category: 'Communication', tag: 'free', platforms: ['web', 'mac', 'win', 'ios', 'android'], status: 'live' },
+      { id: 14, name: 'Mailchimp', url: 'https://mailchimp.com', desc: 'Email marketing and automation platform.', rating: 4.0, category: 'Marketing', tag: 'paid', platforms: ['web'], status: 'live' },
+      { id: 15, name: 'HubSpot', url: 'https://hubspot.com', desc: 'CRM and inbound marketing software.', rating: 4.5, category: 'Marketing', tag: 'paid', platforms: ['web'], status: 'live' },
+    ];
+
+    let allApps = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!allApps || !Array.isArray(allApps) || allApps.length === 0) {
+      allApps = defaultApps.map(a => ({ ...a }));
+    }
+    allApps = allApps.map(a => ({
+      tag: a.pricing || a.tag || 'free',
+      platforms: a.platforms || ['web'],
+      status: a.status || 'live',
+      ...a
+    }));
+
+    const savedApps = localStorage.getItem('appora_saved_apps');
+    let savedAppIds = savedApps ? JSON.parse(savedApps).map(Number) : [];
+
+    function saveSavedApps() {
+      localStorage.setItem('appora_saved_apps', JSON.stringify(savedAppIds));
+    }
+
+    function getIconColor(name) {
+      const colors = ['bg-indigo', 'bg-emerald', 'bg-amber', 'bg-rose', 'bg-blue', 'bg-purple', 'bg-teal', 'bg-orange'];
+      let h = 0;
+      for (let i = 0; i < name.length; i++) {
+        h = ((h << 5) - h) + name.charCodeAt(i);
+        h |= 0;
+      }
+      return colors[Math.abs(h) % colors.length];
+    }
+
+    const priceLabel = { free: 'Free', paid: 'Paid', 'open-source': 'Open Source' };
+
+    function renderSavedApps() {
+      const grid = document.getElementById('dashboardSavedGrid');
+      const saved = savedAppIds.map(id => allApps.find(a => Number(a.id) === id)).filter(Boolean);
+      if (!saved.length) {
+        grid.innerHTML = `
+          <div class="dashboard-empty">
+            <phosphor-icon name="bookmark" size="48" style="color: var(--color-muted-foreground);"></phosphor-icon>
+            <p class="text-muted-foreground">No saved apps yet.</p>
+            <p class="text-xs text-muted-foreground">Browse the directory and save apps you want to revisit.</p>
+          </div>
+        `;
+        return;
+      }
+      grid.innerHTML = saved.map(app => `
+        <article class="dashboard-saved-card" role="link" tabindex="0" onclick="location.href='/app/${encodeURIComponent(app.name)}'" onkeydown="if(event.key==='Enter')location.href='/app/${encodeURIComponent(app.name)}'">
+          <div class="dashboard-saved-icon ${getIconColor(app.name)}">${app.name.charAt(0)}</div>
+          <div>
+            <h3 class="dashboard-saved-name">${app.name}</h3>
+            <p class="dashboard-saved-desc">${app.desc || ''}</p>
+          </div>
+          <div class="dashboard-saved-meta">
+            <span class="price-badge ${app.tag === 'free' ? 'free' : app.tag === 'paid' ? 'paid' : 'open-source'}">${priceLabel[app.tag] || app.tag}</span>
+            <span class="text-xs text-muted-foreground">${app.category || ''}</span>
+            <button class="dashboard-saved-remove" type="button" onclick="event.stopPropagation(); removeSaved(${app.id})" aria-label="Remove ${app.name} from saved">
+              <phosphor-icon name="x" size="16"></phosphor-icon>
+            </button>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    window.removeSaved = function(id) {
+      savedAppIds = savedAppIds.filter(x => x !== Number(id));
+      saveSavedApps();
+      renderSavedApps();
+      showToast('Removed from saved');
+    };
+
+    function renderActivity() {
+      const tbody = document.getElementById('dashboardActivityBody');
+      const recent = allApps.filter(a => a.status === 'live').slice(0, 5);
+      tbody.innerHTML = recent.map(app => `
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div class="dashboard-activity-icon ${getIconColor(app.name)}">${app.name.charAt(0)}</div>
+              <span class="dashboard-activity-name">${app.name}</span>
+            </div>
+          </td>
+          <td class="text-muted-foreground">${app.category || ''}</td>
+          <td class="text-muted-foreground">Updated</td>
+          <td class="text-muted-foreground">Today</td>
+        </tr>
+      `).join('');
+    }
+
+    // Auth gate
+    const gate = document.getElementById('dashboardGate');
+    const content = document.getElementById('dashboardContent');
+    const session = window.ApporaAuth.getSession();
+
+    if (session) {
+      gate.hidden = true;
+      content.hidden = false;
+      document.getElementById('greeting').textContent = `Welcome back, ${session.name || session.email || ''}`.replace(/\s+$/, '');
+      document.getElementById('addToDashboardBtn').addEventListener('click', () => {
+        const savedSet = new Set(savedAppIds);
+        const unsaved = allApps.filter(a => a.status === 'live' && !savedSet.has(Number(a.id)));
+        if (!unsaved.length) {
+          showToast('All apps are already saved.');
+          return;
+        }
+        const toAdd = unsaved[0];
+        savedAppIds.push(Number(toAdd.id));
+        saveSavedApps();
+        renderSavedApps();
+        showToast(`${toAdd.name} added to dashboard.`);
+      });
+      renderSavedApps();
+      renderActivity();
+    } else {
+      content.hidden = true;
+      gate.hidden = false;
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      if (t) {
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+      }
+    }
+
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMobileMenu = document.getElementById('closeMobileMenu');
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+    if (closeMobileMenu) closeMobileMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+        // Preloader — hide fast, never block content
+    var preloader = document.getElementById('preloader');
+    function hidePreloader() {
+      if (preloader) preloader.classList.add('hidden');
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(hidePreloader, 50); });
+    } else {
+      setTimeout(hidePreloader, 50);
+    }
+    setTimeout(hidePreloader, 800);
+    window.addEventListener('beforeunload', function () {
+      if (preloader) preloader.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

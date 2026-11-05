@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appora — Admin Panel</title>
+  <meta name="description" content="Manage the Appora directory." />
+  <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.0.2/dist/phosphor.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-background">
+    <div class="preloader" id="preloader" role="status" aria-label="Loading Appora">
+    <div class="preloader-inner">
+      <div class="preloader-ring" aria-hidden="true"></div>
+      <span class="preloader-logo" aria-hidden="true"></span>
+      <span class="preloader-brand">Appora</span>
+      <span class="preloader-hint">Loading&hellip;</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="/home" class="logo" aria-label="Appora home">
+          <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+          <span class="font-extrabold text-xl text-foreground">Appora</span>
+        </a>
+        <nav class="main-nav" aria-label="Main">
+          <a href="/home" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Home</a>
+          <a href="/browse" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Browse</a>
+          <a href="/pricing" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Pricing</a>
+        </nav>
+        <div class="header-actions">
+          <span class="auth-links" id="authLinks">
+            <a href="/login" class="btn-ghost text-sm">Sign In</a>
+          </span>
+          <span class="auth-user" id="authUser" hidden>
+            <a href="/dashboard" class="btn-ghost text-sm"><phosphor-icon name="user" size="16"></phosphor-icon> <span id="userName">Account</span></a>
+            <button class="btn-ghost text-sm" id="signOutBtn">Sign Out</button>
+          </span>
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+            <phosphor-icon name="list" size="24"></phosphor-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Main navigation">
+    <div class="mobile-menu-header">
+      <span class="font-bold text-lg">Appora</span>
+      <button class="icon-button" id="closeMobileMenu" aria-label="Close menu">
+        <phosphor-icon name="x" size="24"></phosphor-icon>
+      </button>
+    </div>
+    <div class="mobile-nav">
+      <a href="/home">Home</a>
+      <a href="/browse">Browse</a>
+      <a href="/pricing">Pricing</a>
+      <hr style="border-color: var(--color-border); margin: 1rem 0;" />
+      <a href="/login" class="btn-secondary text-sm">Sign In</a>
+      <a href="/signup" class="btn-primary text-sm">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- Admin Gate -->
+  <div class="admin-gate" id="adminGate">
+    <div class="admin-gate-card">
+      <div class="auth-header">
+        <span class="logo-mark" role="img" aria-label="Appora logo" style="width: 48px; height: 48px; margin: 0 auto 0.75rem; display: block;"></span>
+        <h1>Admin Access</h1>
+        <p class="text-sm text-muted-foreground">Restricted area. Sign in to continue.</p>
+      </div>
+
+      <form id="adminGateForm" class="auth-form" novalidate>
+        <div class="form-group">
+          <label for="adminEmail">Admin Email</label>
+          <input type="email" id="adminEmail" placeholder="admin@appora.com" autocomplete="email" />
+          <div class="field-error" id="adminEmailError" role="alert"></div>
+        </div>
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <input type="password" id="adminPassword" placeholder="••••••••" autocomplete="current-password" />
+          <div class="field-error" id="adminPasswordError" role="alert"></div>
+        </div>
+        <div class="form-group" id="adminCodeGroup" hidden>
+          <label for="adminCode">Security Code</label>
+          <input type="password" id="adminCode" inputmode="numeric" placeholder="6-digit code" autocomplete="off" />
+          <div class="field-error" id="adminCodeError" role="alert"></div>
+        </div>
+        <button type="submit" class="btn-primary" id="adminGateBtn">Verify</button>
+      </form>
+
+      <p class="admin-gate-note">Unauthorized access is logged and blocked.</p>
+    </div>
+  </div>
+
+  <main class="container admin-protected" id="adminContent" hidden>
+    <section class="section">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+        <h1 class="text-3xl font-extrabold">Admin Panel</h1>
+        <button class="btn-primary text-sm" id="addAppBtn"><phosphor-icon name="plus" size="16"></phosphor-icon> Add App</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid" style="margin-bottom: 3rem;">
+        <div class="stat-card"><div class="stat-value text-3xl" id="statTotalApps">0</div><div class="stat-label">Total Apps</div></div>
+        <div class="stat-card"><div class="stat-value text-3xl" id="statLiveApps">0</div><div class="stat-label">Live Apps</div></div>
+        <div class="stat-card"><div class="stat-value text-3xl" id="statPendingApps">0</div><div class="stat-label">Pending</div></div>
+      </div>
+
+      <div class="admin-layout">
+        <!-- Manage App Form -->
+        <div class="admin-form-card">
+          <h2 class="section-title text-xl" id="formTitle">Add App</h2>
+          <form id="appForm" novalidate>
+            <input type="hidden" id="editAppId" />
+
+            <div class="form-group">
+              <label for="appName">App Name</label>
+              <input type="text" id="appName" placeholder="Linear" autocomplete="off" />
+              <div class="field-error" id="appNameError" role="alert"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="appUrl">Website URL</label>
+              <input type="url" id="appUrl" placeholder="https://linear.app" autocomplete="off" />
+              <div class="field-error" id="appUrlError" role="alert"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="appDescription">Description</label>
+              <textarea id="appDescription" rows="3" placeholder="A productivity app..." style="resize: vertical;"></textarea>
+              <div class="field-error" id="appDescriptionError" role="alert"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="appLogoUrl">App Logo (URL)</label>
+              <input type="url" id="appLogoUrl" placeholder="https://example.com/logo.png" autocomplete="off" />
+              <div class="field-error" id="appLogoUrlError" role="alert"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="appLogoFile">Or upload a local image</label>
+              <input type="file" id="appLogoFile" accept="image/*" />
+              <div class="logo-preview-wrap" id="logoPreviewWrap" hidden>
+                <img class="logo-preview" id="logoPreview" alt="Logo preview" />
+                <button type="button" class="btn-ghost text-sm" id="clearLogoBtn">Remove</button>
+              </div>
+            </div>
+
+            <div class="admin-form-grid">
+              <div class="form-group">
+                <label for="appCategory">Category</label>
+                <input type="text" id="appCategory" placeholder="Productivity" autocomplete="off" />
+                <div class="field-error" id="appCategoryError" role="alert"></div>
+              </div>
+              <div class="form-group">
+                <label for="appRating">Rating (1-5)</label>
+                <input type="number" id="appRating" min="1" max="5" step="0.5" placeholder="4.5" />
+                <div class="field-error" id="appRatingError" role="alert"></div>
+              </div>
+              <div class="form-group">
+                <label for="appPricing">Pricing</label>
+                <select id="appPricing">
+                  <option value="free">Free</option>
+                  <option value="paid">Paid</option>
+                  <option value="open-source">Open Source</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="appStatus">Status</label>
+                <select id="appStatus">
+                  <option value="live">Live</option>
+                  <option value="pending">Pending</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="admin-form-actions">
+              <button type="submit" class="btn-primary" id="submitBtn">Add App</button>
+              <button type="button" id="cancelEditBtn" class="btn-ghost" style="display:none;">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Apps Table -->
+        <div>
+          <div class="section-header" style="margin-bottom: 1.5rem;">
+            <h2 class="section-title">All Apps</h2>
+          </div>
+          <div class="table-container">
+            <table id="appsTable">
+              <thead>
+                <tr>
+                  <th style="width: 100px;">Icon</th>
+                  <th style="width: 180px;">Name</th>
+                  <th>Description</th>
+                  <th style="width: 120px;">Category</th>
+                  <th style="width: 90px;">Rating</th>
+                  <th style="width: 110px;">Pricing</th>
+                  <th style="width: 100px;">Status</th>
+                  <th style="width: 110px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="8" class="table-empty">No apps found. Add your first app above.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-card border-top" style="border-top: 1px solid var(--color-border);">
+    <div class="container" style="padding: 3rem 0;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+        <div>
+          <div class="logo" style="margin-bottom: 1rem;">
+            <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+            <span class="font-extrabold text-xl">Appora</span>
+          </div>
+          <p class="text-sm text-muted-foreground">
+            Discover Apps. Find Your Tools.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Product</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/home" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Home page">Home</a></li>
+            <li><a href="/browse" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Browse all apps">Browse</a></li>
+            <li><a href="/pricing" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="View pricing information">Pricing</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Company</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Sign in to your account">Login</a></li>
+            <li><a href="/dashboard" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="View your dashboard">Dashboard</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Support</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Help center documentation">Help Center</a></li>
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Contact support team">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="text-sm text-muted-foreground" style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);">
+        &copy; 2024 Appora. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script src="security.js"></script>
+  <script src="auth.js"></script>
+
+  <script>
+    const STORAGE_KEY = 'appora_apps';
+    const defaultApps = [
+      { id: 1, name: 'Linear', url: 'https://linear.app', desc: 'Track and ship work across the software development life cycle.', rating: 4.8, category: 'Productivity', pricing: 'paid', tag: 'paid', platforms: ['web'], status: 'live' },
+      { id: 2, name: 'Figma', url: 'https://figma.com', desc: 'Design, prototype, and share user experiences faster.', rating: 4.7, category: 'Design', pricing: 'free', tag: 'free', platforms: ['web'], status: 'live' },
+      { id: 3, name: 'Cursor', url: 'https://cursor.sh', desc: 'The IDE built for pair-programming with AI.', rating: 4.9, category: 'Development', pricing: 'paid', tag: 'paid', platforms: ['mac', 'win', 'linux'], status: 'live' },
+      { id: 4, name: 'Notion', url: 'https://notion.so', desc: 'One workspace for writing, planning, and organizing.', rating: 4.6, category: 'Productivity', pricing: 'free', tag: 'free', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 5, name: 'Postman', url: 'https://postman.com', desc: 'API development and testing platform.', rating: 4.5, category: 'Development', pricing: 'paid', tag: 'paid', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 6, name: 'Framer', url: 'https://framer.com', desc: 'Interactive web design tool with AI assistance.', rating: 4.3, category: 'Design', pricing: 'free', tag: 'free', platforms: ['web'], status: 'live' },
+      { id: 7, name: 'Replit', url: 'https://replit.com', desc: 'Collaborative browser-based IDE.', rating: 4.4, category: 'Development', pricing: 'open-source', tag: 'open-source', platforms: ['web'], status: 'live' },
+      { id: 8, name: 'Discord', url: 'https://discord.com', desc: 'Chat platform for communities and teams.', rating: 4.2, category: 'Communication', pricing: 'free', tag: 'free', platforms: ['web', 'mac', 'win', 'ios', 'android'], status: 'live' },
+      { id: 9, name: 'Trello', url: 'https://trello.com', desc: 'Visual board-based project management tool.', rating: 4.1, category: 'Productivity', pricing: 'free', tag: 'free', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 10, name: 'Canva', url: 'https://canva.com', desc: 'Create stunning designs for social media and print.', rating: 4.4, category: 'Design', pricing: 'free', tag: 'free', platforms: ['web', 'mac', 'win'], status: 'live' },
+      { id: 11, name: 'GitHub Copilot', url: 'https://github.com/features/copilot', desc: 'AI pair programmer for faster coding.', rating: 4.6, category: 'Development', pricing: 'paid', tag: 'paid', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 12, name: 'Slack', url: 'https://slack.com', desc: 'Team collaboration and messaging platform.', rating: 4.3, category: 'Communication', pricing: 'paid', tag: 'paid', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 13, name: 'Zoom', url: 'https://zoom.us', desc: 'Video conferencing and online meetings.', rating: 4.0, category: 'Communication', pricing: 'free', tag: 'free', platforms: ['web', 'mac', 'win', 'ios', 'android'], status: 'live' },
+      { id: 14, name: 'Mailchimp', url: 'https://mailchimp.com', desc: 'Email marketing and automation platform.', rating: 4.0, category: 'Marketing', pricing: 'paid', tag: 'paid', platforms: ['web'], status: 'live' },
+      { id: 15, name: 'HubSpot', url: 'https://hubspot.com', desc: 'CRM and inbound marketing software.', rating: 4.5, category: 'Marketing', pricing: 'paid', tag: 'paid', platforms: ['web'], status: 'live' },
+    ];
+
+    let apps = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!apps || !Array.isArray(apps) || apps.length === 0) {
+      apps = defaultApps.map(a => ({ ...a }));
+      saveApps();
+    }
+
+    apps = apps.map(a => ({
+      tag: a.pricing || a.tag || 'free',
+      platforms: a.platforms || ['web'],
+      status: a.status || 'live',
+      ...a
+    }));
+
+    function saveApps() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(apps));
+    }
+
+    function getIconColor(name) {
+      const colors = ['bg-indigo', 'bg-emerald', 'bg-amber', 'bg-rose', 'bg-blue', 'bg-purple', 'bg-teal', 'bg-orange'];
+      let h = 0;
+      for (let i = 0; i < name.length; i++) {
+        h = ((h << 5) - h) + name.charCodeAt(i);
+        h |= 0;
+      }
+      return colors[Math.abs(h) % colors.length];
+    }
+
+    const pricingLabel = {
+      free: 'Free',
+      paid: 'Paid',
+      'open-source': 'Open Source'
+    };
+
+    // ---- Logo (URL or local file) ----
+    const logoUrlInput = document.getElementById('appLogoUrl');
+    const logoFileInput = document.getElementById('appLogoFile');
+    const logoPreview = document.getElementById('logoPreview');
+    const logoPreviewWrap = document.getElementById('logoPreviewWrap');
+    const clearLogoBtn = document.getElementById('clearLogoBtn');
+    let logoValue = '';
+
+    function showLogoPreview() {
+      if (logoValue) {
+        logoPreview.src = logoValue;
+        logoPreviewWrap.hidden = false;
+      } else {
+        logoPreview.removeAttribute('src');
+        logoPreviewWrap.hidden = true;
+      }
+    }
+
+    logoUrlInput.addEventListener('input', () => {
+      const v = logoUrlInput.value.trim();
+      logoValue = v;
+      showLogoPreview();
+    });
+
+    logoFileInput.addEventListener('change', () => {
+      const file = logoFileInput.files && logoFileInput.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        setFieldError('appLogoUrl', 'appLogoUrlError', 'Please choose an image file.');
+        return;
+      }
+      setFieldError('appLogoUrl', 'appLogoUrlError', '');
+      const reader = new FileReader();
+      reader.onload = () => {
+        logoValue = reader.result;
+        logoUrlInput.value = '';
+        showLogoPreview();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    clearLogoBtn.addEventListener('click', () => {
+      logoValue = '';
+      logoUrlInput.value = '';
+      logoFileInput.value = '';
+      showLogoPreview();
+    });
+
+    function renderStats() {
+      const total = apps.length;
+      const live = apps.filter(a => a.status === 'live').length;
+      const pending = apps.filter(a => a.status === 'pending').length;
+      document.getElementById('statTotalApps').textContent = total;
+      document.getElementById('statLiveApps').textContent = live;
+      document.getElementById('statPendingApps').textContent = pending;
+    }
+
+    function renderTable() {
+      const tbody = document.querySelector('#appsTable tbody');
+      tbody.innerHTML = '';
+      if (apps.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="table-empty">No apps found.</td></tr>';
+        return;
+      }
+      apps.forEach(app => {
+        const tr = document.createElement('tr');
+        const priceClass = app.tag === 'free' ? 'free' : app.tag === 'paid' ? 'paid' : 'open-source';
+        const name = window.ApporaSecurity ? window.ApporaSecurity.sanitize(app.name) : app.name;
+        const desc = window.ApporaSecurity ? window.ApporaSecurity.sanitize(app.desc) : '';
+        const category = window.ApporaSecurity ? window.ApporaSecurity.sanitize(app.category) : '';
+        const logo = window.ApporaSecurity ? window.ApporaSecurity.safeUrl(app.logo) : (app.logo || '');
+        const iconCell = logo
+          ? `<img class="table-logo" src="${logo}" alt="${name} logo" />`
+          : `<div class="app-icon table-icon ${getIconColor(app.name)}">${(app.name || '').charAt(0)}</div>`;
+        tr.innerHTML = `
+          <td>${iconCell}</td>
+          <td class="cell-strong">${name}</td>
+          <td class="cell-muted">${desc}</td>
+          <td class="cell-muted">${category}</td>
+          <td class="cell-muted">${app.rating != null ? app.rating : ''}</td>
+          <td><span class="price-badge ${priceClass}">${pricingLabel[app.tag] || ''}</span></td>
+          <td><span class="status-badge ${app.status === 'live' ? 'live' : 'pending'}">${app.status}</span></td>
+          <td><div class="table-actions">
+            <button class="icon-button" type="button" onclick="editApp(${app.id})" aria-label="Edit ${name}"><phosphor-icon name="pencil" size="14"></phosphor-icon></button>
+            <button class="icon-button text-destructive" type="button" onclick="deleteApp(${app.id})" aria-label="Delete ${name}"><phosphor-icon name="trash" size="14"></phosphor-icon></button>
+          </div></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function setFieldError(inputId, errorId, message) {
+      const input = document.getElementById(inputId);
+      const err = document.getElementById(errorId);
+      if (input) input.classList.toggle('input-error', !!message);
+      if (err) err.textContent = message || '';
+    }
+
+    function resetForm() {
+      document.getElementById('appForm').reset();
+      document.getElementById('editAppId').value = '';
+      document.getElementById('submitBtn').textContent = 'Add App';
+      document.getElementById('formTitle').textContent = 'Add App';
+      document.getElementById('cancelEditBtn').style.display = 'none';
+      logoValue = '';
+      showLogoPreview();
+      ['appName', 'appUrl', 'appDescription', 'appCategory', 'appRating'].forEach((id, i) => {
+        setFieldError(id, id + 'Error', '');
+      });
+      setFieldError('appLogoUrl', 'appLogoUrlError', '');
+    }
+
+    window.editApp = function(id) {
+      const target = Number(id);
+      const app = apps.find(a => Number(a.id) === target);
+      if (!app) return;
+      document.getElementById('editAppId').value = app.id;
+      document.getElementById('appName').value = app.name || '';
+      document.getElementById('appUrl').value = app.url || '';
+      document.getElementById('appDescription').value = app.desc || '';
+      document.getElementById('appCategory').value = app.category || '';
+      document.getElementById('appRating').value = app.rating != null ? app.rating : '';
+      document.getElementById('appPricing').value = app.tag || 'free';
+      document.getElementById('appStatus').value = app.status || 'live';
+
+      const lg = app.logo || '';
+      logoValue = lg;
+      logoUrlInput.value = (lg && !lg.startsWith('data:')) ? lg : '';
+      logoFileInput.value = '';
+      showLogoPreview();
+
+      document.getElementById('submitBtn').textContent = 'Update App';
+      document.getElementById('formTitle').textContent = 'Edit App';
+      document.getElementById('cancelEditBtn').style.display = 'block';
+      document.querySelector('.admin-form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    window.deleteApp = function(id) {
+      const target = Number(id);
+      const app = apps.find(a => Number(a.id) === target);
+      if (!app) return;
+      if (!window.confirm(`Delete "${app.name}"? This will also remove it from the homepage and browse pages.`)) return;
+      apps = apps.filter(a => Number(a.id) !== target);
+      saveApps();
+      renderStats();
+      renderTable();
+      showToast('App deleted');
+    };
+
+    document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+    document.getElementById('appForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const id = document.getElementById('editAppId').value;
+      const name = document.getElementById('appName').value.trim();
+      const url = document.getElementById('appUrl').value.trim();
+      const desc = document.getElementById('appDescription').value.trim();
+      const category = document.getElementById('appCategory').value.trim();
+      const ratingRaw = document.getElementById('appRating').value.trim();
+      const pricing = document.getElementById('appPricing').value;
+      const status = document.getElementById('appStatus').value;
+
+      let invalid = false;
+      if (!name) { setFieldError('appName', 'appNameError', 'Please enter an app name.'); invalid = true; } else { setFieldError('appName', 'appNameError', ''); }
+      if (!url) { setFieldError('appUrl', 'appUrlError', 'Please enter the website URL.'); invalid = true; }
+      else if (!/^https?:\/\/.+/.test(url)) { setFieldError('appUrl', 'appUrlError', 'URL must start with http:// or https://.'); invalid = true; }
+      else { setFieldError('appUrl', 'appUrlError', ''); }
+      if (!desc) { setFieldError('appDescription', 'appDescriptionError', 'Please enter a description.'); invalid = true; } else { setFieldError('appDescription', 'appDescriptionError', ''); }
+      if (!category) { setFieldError('appCategory', 'appCategoryError', 'Please enter a category.'); invalid = true; } else { setFieldError('appCategory', 'appCategoryError', ''); }
+      let rating = 0;
+      if (ratingRaw) {
+        rating = parseFloat(ratingRaw);
+        if (isNaN(rating) || rating < 1 || rating > 5) { setFieldError('appRating', 'appRatingError', 'Rating must be between 1 and 5.'); invalid = true; }
+        else { setFieldError('appRating', 'appRatingError', ''); }
+      }
+      if (invalid) return;
+
+      const appData = {
+        id: id ? Number(id) : Date.now(),
+        name,
+        url,
+        desc,
+        rating,
+        category,
+        pricing,
+        tag: pricing,
+        platforms: ['web'],
+        status,
+        logo: logoValue,
+      };
+
+      if (id) {
+        apps = apps.map(a => Number(a.id) === Number(id) ? { ...a, ...appData, id: Number(id) } : a);
+        showToast('App updated');
+      } else {
+        apps.push(appData);
+        showToast('App added');
+      }
+      saveApps();
+      renderStats();
+      renderTable();
+      resetForm();
+    });
+
+    document.getElementById('addAppBtn').addEventListener('click', () => {
+      resetForm();
+      document.querySelector('.admin-form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    renderStats();
+    renderTable();
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      if (t) {
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+      }
+    }
+
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMobileMenu = document.getElementById('closeMobileMenu');
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+    if (closeMobileMenu) closeMobileMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+        // Preloader — hide fast, never block content
+    var preloader = document.getElementById('preloader');
+    function hidePreloader() {
+      if (preloader) preloader.classList.add('hidden');
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(hidePreloader, 50); });
+    } else {
+      setTimeout(hidePreloader, 50);
+    }
+    setTimeout(hidePreloader, 800);
+    window.addEventListener('beforeunload', function () {
+      if (preloader) preloader.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

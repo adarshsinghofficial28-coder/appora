@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appora — Pricing</title>
+  <meta name="description" content="Simple, transparent pricing for Appora. Free, Pro, and Team plans — upgrade anytime." />
+  <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.0.2/dist/phosphor.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-background">
+    <div class="preloader" id="preloader" role="status" aria-label="Loading Appora">
+    <div class="preloader-inner">
+      <div class="preloader-ring" aria-hidden="true"></div>
+      <span class="preloader-logo" aria-hidden="true"></span>
+      <span class="preloader-brand">Appora</span>
+      <span class="preloader-hint">Loading&hellip;</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="/home" class="logo" aria-label="Appora home">
+          <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+          <span class="font-extrabold text-xl text-foreground">Appora</span>
+        </a>
+        <nav class="main-nav" aria-label="Main">
+          <a href="/home" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Home</a>
+          <a href="/browse" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Browse</a>
+          <a href="/pricing" class="text-sm font-medium text-primary" aria-current="page">Pricing</a>
+        </nav>
+        <div class="header-actions">
+          <span class="auth-links" id="authLinks">
+            <a href="/login" class="btn-ghost text-sm">Sign In</a>
+            <a href="/signup" class="btn-primary text-sm">Get Started</a>
+          </span>
+          <span class="auth-user" id="authUser" hidden>
+            <a href="/dashboard" class="btn-ghost text-sm"><phosphor-icon name="user" size="16"></phosphor-icon> <span id="userName">Account</span></a>
+            <button class="btn-ghost text-sm" id="signOutBtn">Sign Out</button>
+          </span>
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+            <phosphor-icon name="list" size="24"></phosphor-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Main navigation">
+    <div class="mobile-menu-header">
+      <span class="font-bold text-lg">Appora</span>
+      <button class="icon-button" id="closeMobileMenu" aria-label="Close menu">
+        <phosphor-icon name="x" size="24"></phosphor-icon>
+      </button>
+    </div>
+    <div class="mobile-nav">
+      <a href="/home">Home</a>
+      <a href="/browse">Browse</a>
+      <a href="/pricing">Pricing</a>
+      <hr style="border-color: var(--color-border); margin: 1rem 0;" />
+      <a href="/login" class="btn-secondary text-sm">Sign In</a>
+      <a href="/signup" class="btn-primary text-sm">Get Started</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Pricing Hero -->
+    <section class="pricing-hero">
+      <div class="container">
+        <div class="pricing-hero-body">
+          <span class="hero-eyebrow">
+            <phosphor-icon name="tag" size="16"></phosphor-icon>
+            Simple, transparent pricing
+          </span>
+          <h1 class="hero-title text-foreground">Choose the plan that's right for you</h1>
+          <p class="hero-subtitle">All plans include access to our full app directory. Upgrade anytime, cancel anytime.</p>
+
+          <div class="pricing-toggle-row" role="group" aria-label="Billing period">
+            <div class="pricing-toggle">
+              <button type="button" id="monthlyToggle" class="active" aria-pressed="true">Monthly</button>
+              <button type="button" id="annualToggle" aria-pressed="false">Annual</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pricing-grid">
+          <!-- Free Plan -->
+          <div class="pricing-card">
+            <div class="pricing-header">
+              <h2 class="pricing-name">Free</h2>
+              <div class="pricing-price-row">
+                <span class="pricing-price" data-monthly="$0" data-annual="$0">$0</span>
+                <span class="pricing-period">/month</span>
+              </div>
+              <p class="pricing-note" data-monthly="" data-annual=""></p>
+              <p class="pricing-desc">Perfect for exploring and personal use</p>
+            </div>
+            <ul class="pricing-features">
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Browse our app directory</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Save bookmarks</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Basic category filters</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Community support</li>
+            </ul>
+            <a href="/signup" class="btn-secondary pricing-cta">Get Started Free</a>
+          </div>
+
+          <!-- Pro Plan -->
+          <div class="pricing-card highlight">
+            <div class="pricing-badge">Most Popular</div>
+            <div class="pricing-header">
+              <h2 class="pricing-name">Pro</h2>
+              <div class="pricing-price-row">
+                <span class="pricing-price" data-monthly="$12" data-annual="$10">$12</span>
+                <span class="pricing-period">/month</span>
+              </div>
+              <p class="pricing-note" data-monthly="" data-annual="Billed annually"></p>
+              <p class="pricing-desc">For professionals and small teams</p>
+            </div>
+            <ul class="pricing-features">
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Everything in Free</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Unlimited bookmarks</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Advanced filters &amp; sorting</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Export lists (CSV, JSON)</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Price drop alerts</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Priority support</li>
+            </ul>
+            <a href="/signup" class="btn-primary pricing-cta">Start Pro Trial</a>
+          </div>
+
+          <!-- Team Plan -->
+          <div class="pricing-card">
+            <div class="pricing-header">
+              <h2 class="pricing-name">Team</h2>
+              <div class="pricing-price-row">
+                <span class="pricing-price" data-monthly="$49" data-annual="$39">$49</span>
+                <span class="pricing-period">/month</span>
+              </div>
+              <p class="pricing-note" data-monthly="" data-annual="Billed annually"></p>
+              <p class="pricing-desc">For teams and organizations</p>
+            </div>
+            <ul class="pricing-features">
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Everything in Pro</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Up to 10 team members</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Shared workspaces</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Team analytics dashboard</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> SSO &amp; SAML authentication</li>
+              <li><phosphor-icon name="check" size="18"></phosphor-icon> Dedicated account manager</li>
+            </ul>
+            <a href="/login" class="btn-secondary pricing-cta">Contact Sales</a>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="faq-wrap">
+          <h2 class="section-title" style="text-align: center; margin-bottom: 2rem;">Frequently Asked Questions</h2>
+          <div class="detail-card">
+            <details class="faq-item">
+              <summary>
+                Can I switch plans later?
+                <phosphor-icon name="caret-down" size="20"></phosphor-icon>
+              </summary>
+              <p class="text-muted-foreground mt-3" style="font-size: 0.875rem;">Yes, you can upgrade or downgrade at any time. Changes take effect immediately for upgrades, and at the end of the billing cycle for downgrades.</p>
+            </details>
+            <details class="faq-item">
+              <summary>
+                Is there a free trial for Pro?
+                <phosphor-icon name="caret-down" size="20"></phosphor-icon>
+              </summary>
+              <p class="text-muted-foreground mt-3" style="font-size: 0.875rem;">Yes, Pro includes a 14-day free trial. No credit card required. You'll have full access to all Pro features during the trial.</p>
+            </details>
+            <details class="faq-item">
+              <summary>
+                What payment methods do you accept?
+                <phosphor-icon name="caret-down" size="20"></phosphor-icon>
+              </summary>
+              <p class="text-muted-foreground mt-3" style="font-size: 0.875rem;">We accept all major credit cards (Visa, Mastercard, Amex), PayPal, and bank transfers for annual Team plans.</p>
+            </details>
+            <details class="faq-item">
+              <summary>
+                Can I cancel anytime?
+                <phosphor-icon name="caret-down" size="20"></phosphor-icon>
+              </summary>
+              <p class="text-muted-foreground mt-3" style="font-size: 0.875rem;">Absolutely. Cancel anytime from your dashboard. You'll retain access until the end of your billing period. No questions asked.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-card border-top" style="border-top: 1px solid var(--color-border);">
+    <div class="container" style="padding: 3rem 0;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+        <div>
+          <div class="logo" style="margin-bottom: 1rem;">
+            <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+            <span class="font-extrabold text-xl">Appora</span>
+          </div>
+          <p class="text-sm text-muted-foreground">
+            Discover Apps. Find Your Tools.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Product</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/home" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Home page">Home</a></li>
+            <li><a href="/browse" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Browse all apps">Browse</a></li>
+            <li><a href="/pricing" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="View pricing information">Pricing</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Company</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Sign in to your account">Login</a></li>
+            <li><a href="/dashboard" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="View your dashboard">Dashboard</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Support</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Help center documentation">Help Center</a></li>
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Contact support team">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="text-sm text-muted-foreground" style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);">
+        &copy; 2024 Appora. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script src="security.js"></script>
+  <script src="auth.js"></script>
+
+  <script>
+    // Billing period toggle
+    const monthlyToggle = document.getElementById('monthlyToggle');
+    const annualToggle = document.getElementById('annualToggle');
+
+    function setBilling(annual) {
+      const active = annual ? annualToggle : monthlyToggle;
+      const inactive = annual ? monthlyToggle : annualToggle;
+      active.classList.add('active');
+      active.setAttribute('aria-pressed', 'true');
+      inactive.classList.remove('active');
+      inactive.setAttribute('aria-pressed', 'false');
+
+      document.querySelectorAll('.pricing-card').forEach(card => {
+        const price = card.querySelector('.pricing-price');
+        const note = card.querySelector('.pricing-note');
+        if (price && price.hasAttribute('data-annual')) {
+          price.textContent = annual ? price.getAttribute('data-annual') : price.getAttribute('data-monthly');
+        }
+        if (note) {
+          note.textContent = annual ? (note.getAttribute('data-annual') || '') : (note.getAttribute('data-monthly') || '');
+        }
+      });
+    }
+
+    if (monthlyToggle) monthlyToggle.addEventListener('click', () => setBilling(false));
+    if (annualToggle) annualToggle.addEventListener('click', () => setBilling(true));
+  </script>
+
+  <!-- Mobile Menu Script -->
+  <script>
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMobileMenu = document.getElementById('closeMobileMenu');
+
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+    if (closeMobileMenu) closeMobileMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (mobileMenu.classList.contains('open')) {
+          mobileMenu.classList.remove('open');
+        }
+      });
+    });
+  </script>
+
+  <script>
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      if (t) {
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+      }
+    }
+
+    const preloader = document.getElementById('preloader');
+    window.addEventListener('load', () => {
+      if (preloader) preloader.classList.add('hidden');
+    });
+    window.addEventListener('beforeunload', () => {
+      if (preloader) preloader.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

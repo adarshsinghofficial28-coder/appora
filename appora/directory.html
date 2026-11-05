@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appora — App Directory</title>
+  <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.0.2/dist/phosphor.js" defer></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-background">
+    <div class="preloader" id="preloader" role="status" aria-label="Loading Appora">
+    <div class="preloader-inner">
+      <div class="preloader-ring" aria-hidden="true"></div>
+      <span class="preloader-logo" aria-hidden="true"></span>
+      <span class="preloader-brand">Appora</span>
+      <span class="preloader-hint">Loading&hellip;</span>
+    </div>
+  </div>
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="/home" class="logo">
+          <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+          <span class="font-extrabold text-xl text-foreground">Appora</span>
+        </a>
+        <nav class="main-nav">
+          <a href="/home" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Home</a>
+          <a href="/browse" class="text-sm font-medium text-primary">Browse</a>
+          <a href="/pricing" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Pricing</a>
+        </nav>
+        <div class="header-actions">
+          <button class="btn-ghost text-sm">Sign In</button>
+          <button class="btn-primary text-sm">Get Started</button>
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+            <phosphor-icon name="list" size="24"></phosphor-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div style="max-width: 900px; margin: 0 auto; padding-bottom: 2rem;">
+          <div class="search-bar" style="margin-bottom: 1.5rem;">
+            <phosphor-icon name="magnifying-glass" size="18" class="search-icon"></phosphor-icon>
+            <input
+              type="search"
+              placeholder="Search apps..."
+              id="dirSearchInput"
+              aria-label="Search directory"
+              autocomplete="off"
+            />
+          </div>
+          <div class="filters">
+            <label for="categoryFilter" class="sr-only">Filter by category</label>
+            <select class="filter-select" id="categoryFilter" aria-label="Category filter">
+              <option value="">All Categories</option>
+              <option value="productivity">Productivity</option>
+              <option value="design">Design</option>
+              <option value="development">Development</option>
+              <option value="ai">AI & Machine Learning</option>
+            </select>
+            <label for="tagFilter" class="sr-only">Filter by pricing</label>
+            <select class="filter-select" id="tagFilter" aria-label="Pricing filter">
+              <option value="">All Pricing</option>
+              <option value="free">Free</option>
+              <option value="paid">Paid</option>
+              <option value="open-source">Open Source</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-bottom: 1.5rem;">
+          <h2 class="section-title">All Apps</h2>
+        </div>
+
+        <div class="apps-grid" id="directoryGrid">
+          <!-- populated by JS -->
+        </div>
+
+        <div class="pagination" style="margin-top: 2rem;">
+          <button class="active">1</button>
+          <button>2</button>
+          <button>3</button>
+          <button>4</button>
+          <button>5</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-card">
+    <div class="container" style="padding: 3rem 0;">
+      <div class="text-sm text-muted-foreground" style="padding-top: 1.5rem; border-top: 1px solid var(--color-border); text-align: center;">
+        &copy; 2024 Appora. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script>
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileMenuBtn && mobileMenu) mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+
+    const apps = [
+      { name: 'Linear', desc: 'Track and ship work across the software development life cycle.', tag: 'paid', platforms: ['web'], category: 'Productivity' },
+      { name: 'Figma', desc: 'Design, prototype, and share user experiences faster.', tag: 'free', platforms: ['web'], category: 'Design' },
+      { name: 'Cursor', desc: 'The IDE built for pair-programming with AI.', tag: 'paid', platforms: ['mac', 'win', 'linux'], category: 'Development' },
+      { name: 'Notion', desc: 'One workspace for writing, planning, and organizing.', tag: 'free', platforms: ['web', 'mac', 'win', 'linux'], category: 'Productivity' },
+      { name: 'Postman', desc: 'API development and testing platform.', tag: 'paid', platforms: ['web', 'mac', 'win', 'linux'], category: 'Development' },
+      { name: 'Framer', desc: 'Interactive web design tool with AI assistance.', tag: 'free', platforms: ['web'], category: 'Design' },
+      { name: 'Replit', desc: 'Collaborative browser-based IDE.', tag: 'open-source', platforms: ['web'], category: 'Development' },
+      { name: 'Trello', desc: 'Visual board-based project management tool.', tag: 'free', platforms: ['web', 'mac', 'win', 'linux'], category: 'Productivity' },
+      { name: 'Canva', desc: 'Create stunning designs for social media and print.', tag: 'free', platforms: ['web', 'mac', 'win'], category: 'Design' },
+      { name: 'GitHub Copilot', desc: 'AI pair programmer for faster coding.', tag: 'paid', platforms: ['web', 'mac', 'win', 'linux'], category: 'Development' },
+    ];
+
+    const iconColors = ['bg-indigo', 'bg-emerald', 'bg-amber', 'bg-rose', 'bg-blue', 'bg-purple', 'bg-teal', 'bg-orange'];
+
+    function getIcon(name) {
+      let h = 0;
+      for (let i = 0; i < name.length; i++) {
+        h = ((h << 5) - h) + name.charCodeAt(i);
+        h |= 0;
+      }
+      return iconColors[Math.abs(h) % iconColors.length];
+    }
+
+    function platformIcons(platforms) {
+      const map = { web: 'web', mac: 'apple', win: 'windows', linux: 'terminal' };
+      return platforms.map(p => `<phosphor-icon name="${map[p]}" size="14" style="color: var(--color-muted-foreground);"></phosphor-icon>`).join('');
+    }
+
+    function card(app) {
+      const tagName = { free: 'Free', paid: 'Paid', 'open-source': 'Open Source' }[app.tag] || 'Free';
+      const tagClass = app.tag === 'free' ? 'free' : app.tag === 'paid' ? 'paid' : 'open-source';
+      return `
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-icon ${getIcon(app.name)}">${app.name.charAt(0)}</div>
+            <div style="flex: 1;">
+              <h3 class="font-semibold">${app.name}</h3>
+              <p class="text-muted-foreground">${app.desc}</p>
+              <div class="app-card-footer" style="border-top:none; padding-top:0;">
+                <div class="app-card-meta">
+                  <span class="price-badge ${tagClass}">${tagName}</span>
+                  <div class="platform-pill">${platformIcons(app.platforms)}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const grid = document.getElementById('directoryGrid');
+    if (grid) grid.innerHTML = apps.map(card).join('');
+
+    // Filter handlers
+    const catFilter = document.getElementById('categoryFilter');
+    const tagFilter = document.getElementById('tagFilter');
+    const searchInput = document.getElementById('dirSearchInput');
+    function render() {
+      const q = searchInput.value.toLowerCase();
+      const c = catFilter.value;
+      const t = tagFilter.value;
+      const filtered = apps.filter(a => {
+        const matchesQ = a.name.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q) || a.category.toLowerCase().includes(q);
+        const matchesC = !c || a.category.toLowerCase() === c;
+        const matchesT = !t || a.tag === t;
+        return matchesQ && matchesC && matchesT;
+      });
+      grid.innerHTML = filtered.map(card).join('');
+    }
+    [catFilter, tagFilter, searchInput].forEach(el => el.addEventListener('input', render));
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+        // Preloader — hide fast, never block content
+    var preloader = document.getElementById('preloader');
+    function hidePreloader() {
+      if (preloader) preloader.classList.add('hidden');
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(hidePreloader, 50); });
+    } else {
+      setTimeout(hidePreloader, 50);
+    }
+    setTimeout(hidePreloader, 800);
+    window.addEventListener('beforeunload', function () {
+      if (preloader) preloader.classList.remove('hidden');
+    });
+  </script>
+{/* Slide to confirm component */}
+  <div class="slide-to-confirm" style="margin: 2rem auto; max-width: 280px;">
+    <SlideConfirm corner={28} speed={60} width={280}>
+      <span>Slide to confirm</span>
+    </SlideConfirm>
+  </div>
+  <script src="security.js"></script>
+</body>
+</html>

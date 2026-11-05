@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appora — Discover Apps. Find Your Tools.</title>
+  <meta name="description" content="Appora helps you discover, evaluate, and bookmark the best software for your workflow." />
+  <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.0.2/dist/phosphor.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-background">
+    <div class="preloader" id="preloader" role="status" aria-label="Loading Appora">
+    <div class="preloader-inner">
+      <div class="preloader-ring" aria-hidden="true"></div>
+      <span class="preloader-logo" aria-hidden="true"></span>
+      <span class="preloader-brand">Appora</span>
+      <span class="preloader-hint">Loading&hellip;</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="/home" class="logo" aria-label="Appora home">
+          <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+          <span class="font-extrabold text-xl text-foreground">Appora</span>
+        </a>
+        <nav class="main-nav" aria-label="Main">
+          <a href="/home" class="text-sm font-medium text-primary" aria-current="page">Home</a>
+          <a href="/browse" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Browse</a>
+          <a href="/repositories" class="text-sm font-medium text-muted-foreground hover:text-primary transition"><phosphor-icon name="github-logo" size="16"></phosphor-icon> Repositories</a>
+          <a href="/pricing" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Pricing</a>
+        </nav>
+        <div class="header-actions">
+          <span class="auth-links" id="authLinks">
+            <a href="/login" class="btn-ghost text-sm">Sign In</a>
+            <a href="/signup" class="btn-primary text-sm">Get Started</a>
+          </span>
+          <span class="auth-user" id="authUser" hidden>
+            <a href="/dashboard" class="btn-ghost text-sm"><phosphor-icon name="user" size="16"></phosphor-icon> <span id="userName">Account</span></a>
+            <button class="btn-ghost text-sm" id="signOutBtn">Sign Out</button>
+          </span>
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+            <phosphor-icon name="list" size="24"></phosphor-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Main navigation">
+    <div class="mobile-menu-header">
+      <span class="font-bold text-lg">Appora</span>
+      <button class="icon-button" id="closeMobileMenu" aria-label="Close menu">
+        <phosphor-icon name="x" size="24"></phosphor-icon>
+      </button>
+    </div>
+    <div class="mobile-nav">
+      <a href="/home">Home</a>
+      <a href="/browse">Browse</a>
+      <a href="/repositories">Repositories</a>
+      <a href="/pricing">Pricing</a>
+      <hr style="border-color: var(--color-border); margin: 1rem 0;" />
+      <a href="/login" class="btn-secondary text-sm">Sign In</a>
+      <a href="/signup" class="btn-primary text-sm">Get Started</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-wash" aria-hidden="true"></div>
+      <div class="container">
+        <div class="hero-body">
+          <span class="hero-eyebrow">
+            <phosphor-icon name="sparkle" size="16"></phosphor-icon>
+            Hand-picked software directory
+          </span>
+          <h1 class="hero-title text-foreground">
+            Discover Apps. Find Your Tools.
+          </h1>
+          <p class="hero-subtitle">
+            Appora helps you discover, evaluate, and bookmark the best software for your workflow.
+            Browse apps across productivity, design, development, AI, and communication.
+          </p>
+
+          <div class="hero-search">
+            <form id="heroSearchForm" role="search" aria-label="Search apps and tools">
+              <div class="hero-search-bar">
+                <span class="hero-search-icon" aria-hidden="true">
+                  <phosphor-icon name="magnifying-glass" size="22"></phosphor-icon>
+                </span>
+                <input
+                  type="search"
+                  placeholder="Search apps, tools, categories..."
+                  aria-label="Search apps and tools"
+                  id="heroSearchInput"
+                  name="q"
+                  class="hero-search-input"
+                  autocomplete="off" />
+                <button type="submit" class="hero-search-btn">Search</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="hero-quick">
+            <a href="/directory?filter=productivity">Productivity</a>
+            <a href="/directory?filter=design">Design</a>
+            <a href="/directory?filter=development">Development</a>
+            <a href="/directory?filter=ai">AI & ML</a>
+            <a href="/directory?filter=oss">Open Source</a>
+          </div>
+        </div>
+
+        <div class="trust-strip">
+          <span class="trust-item">
+            <phosphor-icon name="check-circle" size="18"></phosphor-icon>
+            Free to browse
+          </span>
+          <span class="trust-item">
+            <phosphor-icon name="user-circle" size="18"></phosphor-icon>
+            No sign-up required
+          </span>
+          <span class="trust-item">
+            <phosphor-icon name="arrows-clockwise" size="18"></phosphor-icon>
+            Updated regularly
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section" style="padding-top: 3rem;">
+      <div class="container">
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <phosphor-icon name="compass" size="24"></phosphor-icon>
+            </div>
+            <h3 class="feature-title">Discover</h3>
+            <p class="feature-desc">
+              Browse a curated catalog of apps across productivity, design, development, AI, and communication.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <phosphor-icon name="clipboard-text" size="24"></phosphor-icon>
+            </div>
+            <h3 class="feature-title">Evaluate</h3>
+            <p class="feature-desc">
+              Read clear descriptions and ratings so you can shortlist the right tool with confidence.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <phosphor-icon name="bookmark-simple" size="24"></phosphor-icon>
+            </div>
+            <h3 class="feature-title">Bookmark</h3>
+            <p class="feature-desc">
+              Save favorites to your dashboard and revisit them any time your workflow changes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Community Library (direct GitHub fetch, no account/OAuth) -->
+    <section class="section" style="padding-top: 0;">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Community Library</h2>
+            <p class="text-sm text-muted-foreground" style="margin-top: 0.25rem;">Open-source repositories, fetched live from GitHub.</p>
+          </div>
+          <a href="/repositories" class="section-link">Open full index</a>
+        </div>
+
+        <div class="repo-loading" id="homeLibLoading" hidden>
+          <phosphor-icon name="circle-notch" size="26" class="spin"></phosphor-icon>
+          <span>Fetching repositories&hellip;</span>
+        </div>
+
+        <div class="repo-error" id="homeLibError" hidden></div>
+
+        <div class="repo-grid" id="homeLibGrid" style="margin-top: 1.5rem;"></div>
+      </div>
+    </section>
+
+    <!-- Trending / Engagement Spikes / GitHub Trending -->
+    <section class="section" style="padding-top: 0;">
+      <div class="container">
+
+        <div class="trending-header">
+          <div>
+            <h2 class="section-title">Trending on GitHub</h2>
+            <p class="text-sm text-muted-foreground" style="margin-top: 0.25rem;">Top repos by our trending score, updated live.</p>
+          </div>
+          <div class="trending-tabs" role="tablist" aria-label="Trending window">
+            <button class="active" role="tab" data-window="daily" aria-selected="true">Daily</button>
+            <button role="tab" data-window="weekly" aria-selected="false">Weekly</button>
+            <button role="tab" data-window="monthly" aria-selected="false">Monthly</button>
+            <button role="tab" data-window="yearly" aria-selected="false">Yearly</button>
+          </div>
+        </div>
+
+        <div class="repo-loading" id="trendLoading" hidden>
+          <phosphor-icon name="circle-notch" size="26" class="spin"></phosphor-icon>
+          <span>Ranking repositories&hellip;</span>
+        </div>
+
+        <div class="repo-error" id="trendError" hidden></div>
+
+        <div id="trendList"></div>
+
+        <!-- Engagement spikes -->
+        <h2 class="section-title" style="margin-top: 3rem;">Engagement Spikes</h2>
+        <p class="text-sm text-muted-foreground" style="margin: 0.25rem 0 1.25rem;">Repositories with the strongest recent momentum (stars · forks · open issues).</p>
+
+        <div class="repo-loading" id="spikeLoading" hidden>
+          <phosphor-icon name="circle-notch" size="26" class="spin"></phosphor-icon>
+          <span>Measuring engagement&hellip;</span>
+        </div>
+        <div class="repo-error" id="spikeError" hidden></div>
+        <div id="spikeList"></div>
+
+        <!-- GitHub Trending verbatim -->
+        <h2 class="section-title" style="margin-top: 3rem;">GitHub Trending (verbatim)</h2>
+        <p class="text-sm text-muted-foreground" style="margin: 0.25rem 0 1rem;">github.com/trending in GitHub's own rank order.</p>
+
+        <div class="repo-card" style="max-width: 720px;">
+          <div class="repo-card-top">
+            <phosphor-icon name="warning-circle" size="20" style="color: #F59E0B; flex-shrink: 0;"></phosphor-icon>
+            <span style="font-weight: 600;">Requires a server-side scraper</span>
+          </div>
+          <p class="repo-desc" style="margin-top: 0.5rem;">
+            GitHub's trending page cannot be read directly from the browser (CORS blocks it). To show the verbatim list here, add a small scraper — e.g. a Python function on Vercel that fetches <code>github.com/trending</code> and returns it as JSON. Until then, open it directly:
+          </p>
+          <a href="https://github.com/trending" target="_blank" rel="noopener" class="btn-secondary" style="align-self: flex-start; margin-top: 0.5rem;">Open github.com/trending</a>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="container">
+      <!-- Category Chips -->
+      <section class="section" style="padding-top: 2rem;">
+        <div class="categories" role="list" aria-label="Filter by category">
+          <button class="category-chip active" data-category="all" aria-current="true">
+            <phosphor-icon name="grid-four-window" size="16"></phosphor-icon>
+            All Apps
+          </button>
+          <button class="category-chip" data-category="productivity">Productivity</button>
+          <button class="category-chip" data-category="design">Design</button>
+          <button class="category-chip" data-category="development">Development</button>
+          <button class="category-chip" data-category="ai">AI & ML</button>
+          <button class="category-chip" data-category="communication">Communication</button>
+          <button class="category-chip" data-category="free">Free Only</button>
+        </div>
+      </section>
+
+      <!-- Featured Apps -->
+      <section class="section" style="padding-top: 0;">
+        <div class="section-header">
+          <h2 class="section-title">Featured Apps</h2>
+          <a href="/directory" class="section-link">View all</a>
+        </div>
+        <div class="apps-grid" id="featuredGrid">
+          <!-- App cards populated by JS -->
+        </div>
+      </section>
+
+      <!-- Trending Apps -->
+      <section class="section" style="padding-top: 0;">
+        <div class="section-header">
+          <h2 class="section-title">Trending</h2>
+          <a href="/directory" class="section-link">View all</a>
+        </div>
+        <div class="apps-grid" id="trendingGrid">
+          <!-- App cards populated by JS -->
+        </div>
+      </section>
+
+      <!-- Free Open-Source Software -->
+      <section class="section" style="padding-top: 0;">
+        <div class="section-header">
+          <h2 class="section-title">Free Open-Source Software</h2>
+          <a href="/directory?filter=oss" class="section-link">View all</a>
+        </div>
+        <div class="apps-grid" id="ossGrid">
+          <!-- App cards populated by JS -->
+        </div>
+      </section>
+
+      <!-- Bottom CTA -->
+      <section class="cta-section">
+        <div class="cta-card">
+          <h2>Find your next favorite tool</h2>
+          <p>Browse the full directory, compare options, and bookmark what works for you.</p>
+          <div class="cta-actions">
+            <a href="/directory" class="btn-primary">Browse Apps</a>
+            <a href="/signup" class="btn-secondary">Get Started</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-card border-top" style="border-top: 1px solid var(--color-border);">
+    <div class="container" style="padding: 3rem 0;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+        <div>
+          <div class="logo" style="margin-bottom: 1rem;">
+            <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+            <span class="font-extrabold text-xl">Appora</span>
+          </div>
+          <p class="text-sm text-muted-foreground">
+            Discover Apps. Find Your Tools.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Product</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/home" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Home page">Home</a></li>
+            <li><a href="/browse" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Browse all apps">Browse</a></li>
+            <li><a href="/pricing" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="View pricing information">Pricing</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Company</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Sign in to your account">Login</a></li>
+            <li><a href="/dashboard" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="View your dashboard">Dashboard</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Support</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Help center documentation">Help Center</a></li>
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Contact support team">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="text-sm text-muted-foreground" style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);">
+        &copy; 2024 Appora. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script src="security.js"></script>
+  <script src="auth.js"></script>
+
+  <script>
+    // Load apps from localStorage (added via admin panel), fallback to defaults
+    const STORAGE_KEY = 'appora_apps';
+    const defaultApps = [
+      { id: 1, logo: '', name: 'Linear', url: 'https://linear.app', desc: 'Track and ship work across the software development life cycle.', rating: 4.8, category: 'Productivity', pricing: 'paid', tag: 'paid', platforms: ['web'], status: 'live' },
+      { id: 2, logo: '', name: 'Figma', url: 'https://figma.com', desc: 'Design, prototype, and share user experiences faster.', rating: 4.7, category: 'Design', pricing: 'free', tag: 'free', platforms: ['web'], status: 'live' },
+      { id: 3, logo: '', name: 'Cursor', url: 'https://cursor.sh', desc: 'The IDE built for pair-programming with AI.', rating: 4.9, category: 'Development', pricing: 'paid', tag: 'paid', platforms: ['mac', 'win', 'linux'], status: 'live' },
+      { id: 4, logo: '', name: 'Notion', url: 'https://notion.so', desc: 'One workspace for writing, planning, and organizing.', rating: 4.6, category: 'Productivity', pricing: 'free', tag: 'free', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 5, logo: '', name: 'Postman', url: 'https://postman.com', desc: 'API development and testing platform.', rating: 4.5, category: 'Development', pricing: 'paid', tag: 'paid', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 6, logo: '', name: 'Framer', url: 'https://framer.com', desc: 'Interactive web design tool with AI assistance.', rating: 4.3, category: 'Design', pricing: 'free', tag: 'free', platforms: ['web'], status: 'live' },
+      { id: 7, logo: '', name: 'Replit', url: 'https://replit.com', desc: 'Collaborative browser-based IDE.', rating: 4.4, category: 'Development', pricing: 'open-source', tag: 'open-source', platforms: ['web'], status: 'live' },
+      { id: 8, logo: '', name: 'Discord', url: 'https://discord.com', desc: 'Chat platform for communities and teams.', rating: 4.2, category: 'Communication', pricing: 'free', tag: 'free', platforms: ['web', 'mac', 'win', 'ios', 'android'], status: 'live' },
+    ];
+
+    const storedApps = localStorage.getItem(STORAGE_KEY);
+    let allApps = (storedApps && JSON.parse(storedApps).length > 0) ? JSON.parse(storedApps) : defaultApps;
+
+    // Ensure all apps have required fields
+    allApps = allApps.map(app => ({
+      tag: app.pricing || app.tag || 'free',
+      platforms: app.platforms || ['web'],
+      ...app
+    }));
+
+    const iconColors = ['bg-indigo', 'bg-emerald', 'bg-amber', 'bg-rose', 'bg-blue', 'bg-purple', 'bg-teal', 'bg-orange'];
+
+    function getIconColor(name) {
+      let h = 0;
+      for (let i = 0; i < name.length; i++) {
+        h = ((h << 5) - h) + name.charCodeAt(i);
+        h |= 0;
+      }
+      return iconColors[Math.abs(h) % iconColors.length];
+    }
+
+    function getPlatformIcons(platforms) {
+      const map = { web: 'web', mac: 'apple', win: 'windows', linux: 'terminal', ios: 'iphone', android: 'android' };
+      return (platforms || []).map(p => `<phosphor-icon name="${map[p] || 'web'}" size="14" style="color: var(--color-muted-foreground);"></phosphor-icon>`).join('');
+    }
+
+    function generateAppCard(app) {
+      const tagClass = app.tag === 'free' ? 'free' : app.tag === 'paid' ? 'paid' : 'open-source';
+      const tagName = app.tag === 'free' ? 'Free' : app.tag === 'paid' ? 'Paid' : 'Open Source';
+      const ratingStr = app.rating !== undefined ? app.rating.toFixed(1) : '';
+      const esc = (v) => window.ApporaSecurity ? window.ApporaSecurity.sanitize(v) : (v || '');
+      const logo = window.ApporaSecurity ? window.ApporaSecurity.safeUrl(app.logo) : '';
+      const iconInner = logo ? `<img src="${logo}" alt="${esc(app.name)} logo" />` : esc(app.name).charAt(0);
+      return `
+        <div class="app-card" role="link" tabindex="0" onclick="location.href='/app/${encodeURIComponent(app.name)}'" onkeydown="if(event.key==='Enter')location.href='/app/${encodeURIComponent(app.name)}'">
+          <div class="app-card-header">
+            <div class="app-icon ${getIconColor(app.name)}">${iconInner}</div>
+            <div style="flex: 1;">
+              <div class="app-card-body">
+                <h3 class="font-semibold">${esc(app.name)}</h3>
+                <p>${esc(app.desc)}</p>
+              </div>
+              <div class="app-card-footer">
+                <div class="app-card-meta">
+                  <span class="price-badge ${tagClass}">${tagName}</span>
+                  <div class="platform-pill">${getPlatformIcons(app.platforms)}</div>
+                </div>
+                ${ratingStr ? `<div class="platform-pill"><phosphor-icon name="star" size="14" weight="fill" style="color: #F59E0B;"></phosphor-icon> ${ratingStr}</div>` : ''}
+              </div>
+            </div>
+          </div>
+          <button class="bookmark-btn" onclick="event.stopPropagation(); toggleBookmark(this)" aria-label="Bookmark">
+            <phosphor-icon name="bookmark" size="18"></phosphor-icon>
+          </button>
+        </div>
+      `;
+    }
+
+    function toggleBookmark(btn) {
+      btn.classList.toggle('bookmarked');
+      const icon = btn.querySelector('phosphor-icon');
+      icon.setAttribute('name', btn.classList.contains('bookmarked') ? 'bookmark-simple' : 'bookmark');
+      icon.setAttribute('weight', btn.classList.contains('bookmarked') ? 'fill' : 'regular');
+      showToast(btn.classList.contains('bookmarked') ? 'Bookmarked!' : 'Removed bookmark');
+    }
+
+    function populateGrid(id, items) {
+      const grid = document.getElementById(id);
+      if (grid && items) {
+        grid.innerHTML = items.map(generateAppCard).join('');
+      }
+    }
+
+    // Split apps for sections
+    const liveApps = allApps.filter(a => a.status === 'live');
+    const featured = liveApps.slice(0, 6);
+    const trending = liveApps.slice(6, 12);
+    const ossApps = allApps.filter(a => a.tag === 'open-source').slice(0, 6);
+
+    populateGrid('featuredGrid', featured);
+    populateGrid('trendingGrid', trending);
+    populateGrid('ossGrid', ossApps);
+
+    // Hero search form
+    const heroSearchForm = document.getElementById('heroSearchForm');
+    const heroSearchInput = document.getElementById('heroSearchInput');
+    if (heroSearchForm) {
+      heroSearchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const query = heroSearchInput.value.trim();
+        if (query) {
+          showToast(`Searching for "${query}"...`);
+          window.location.href = `/search?q=${encodeURIComponent(query)}`;
+        }
+      });
+    }
+
+    // Category filter chips
+    document.querySelectorAll('.category-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.category-chip').forEach(c => {
+          c.classList.remove('active');
+          c.removeAttribute('aria-current');
+        });
+        chip.classList.add('active');
+        chip.setAttribute('aria-current', 'true');
+        showToast(`Filtered by: ${chip.textContent.trim()}`);
+      });
+    });
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+      }
+    }
+
+    // Community Library — direct GitHub API fetch (no account / no OAuth)
+    const LIB_USERNAME = 'appora'; // <-- put the GitHub username whose repos you want to show
+    const homeLibGrid = document.getElementById('homeLibGrid');
+    const homeLibLoading = document.getElementById('homeLibLoading');
+    const homeLibError = document.getElementById('homeLibError');
+
+    if (homeLibGrid) {
+      (async () => {
+        homeLibLoading.hidden = false;
+        try {
+          const res = await fetch(`https://api.github.com/users/${encodeURIComponent(LIB_USERNAME)}/repos?sort=updated&per_page=6`, {
+            headers: { 'Accept': 'application/vnd.github+json' }
+          });
+          if (!res.ok) throw new Error('Could not load repositories (HTTP ' + res.status + ').');
+          const repos = await res.json();
+          homeLibLoading.hidden = true;
+          if (!repos.length) {
+            homeLibError.textContent = 'No public repositories found for @' + LIB_USERNAME + '.';
+            homeLibError.hidden = false;
+            return;
+          }
+          const LANG = { JavaScript: '#f1e05a', TypeScript: '#3178c6', HTML: '#e34c26', CSS: '#563d7c', Python: '#3572A5', Go: '#00ADD8', Rust: '#dea584', PHP: '#4F5D95', Shell: '#89e051', Ruby: '#701516', Vue: '#41b883', 'C++': '#f34b7d', C: '#555555', Java: '#b07219' };
+          homeLibGrid.innerHTML = repos.map(r => {
+            const lang = r.language;
+            const col = LANG[lang] || '#8b949e';
+            return `
+              <div class="repo-card">
+                <div class="repo-card-top">
+                  <phosphor-icon name="repository" size="20" style="color: var(--color-primary); flex-shrink: 0;"></phosphor-icon>
+                  <a class="repo-card-name" href="${window.ApporaSecurity ? window.ApporaSecurity.safeUrl(r.html_url) : r.html_url}" target="_blank" rel="noopener">${window.ApporaSecurity ? window.ApporaSecurity.sanitize(r.name) : r.name}</a>
+                  ${r.private ? '<span class="repo-private">Private</span>' : ''}
+                </div>
+                <p class="repo-desc">${window.ApporaSecurity ? window.ApporaSecurity.sanitize(r.description) : (r.description || 'No description provided.')}</p>
+                <div class="repo-meta">
+                  ${lang ? `<span><span class="repo-lang-dot" style="background: ${col};"></span> ${window.ApporaSecurity ? window.ApporaSecurity.sanitize(lang) : lang}</span>` : ''}
+                  <span><phosphor-icon name="star" size="15" weight="fill" style="color: #F59E0B;"></phosphor-icon> ${r.stargazers_count != null ? r.stargazers_count : 0}</span>
+                  <span><phosphor-icon name="fork" size="15"></phosphor-icon> ${r.forks_count != null ? r.forks_count : 0}</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+        } catch (err) {
+          homeLibLoading.hidden = true;
+          homeLibError.textContent = err.message || 'Something went wrong.';
+          homeLibError.hidden = false;
+        }
+      })();
+    }
+
+    // ===== Trending + Engagement Spikes =====
+    const trendList = document.getElementById('trendList');
+    const trendLoading = document.getElementById('trendLoading');
+    const trendError = document.getElementById('trendError');
+    const spikeList = document.getElementById('spikeList');
+    const spikeLoading = document.getElementById('spikeLoading');
+    const spikeError = document.getElementById('spikeError');
+
+    const esc = (v) => window.ApporaSecurity ? window.ApporaSecurity.sanitize(v) : (v == null ? '' : String(v));
+    const safeUrl = (v) => window.ApporaSecurity ? window.ApporaSecurity.safeUrl(v) : '';
+
+    function rankCard(r, i, score) {
+      return `
+        <div class="rank-card">
+          <div class="rank-num">${i + 1}</div>
+          <div>
+            <a class="rank-name" href="${safeUrl(r.html_url)}" target="_blank" rel="noopener">${esc(r.full_name)}</a>
+            <div class="rank-desc">${esc(r.description) || 'No description.'}</div>
+          </div>
+          <div class="rank-score"><b>${score}</b><span>score</span></div>
+        </div>
+      `;
+    }
+
+    function spikeScore(r) {
+      return (r.stargazers_count || 0) + (r.forks_count || 0) * 2 + (r.open_issues_count || 0) * 0.5;
+    }
+
+    if (trendList) {
+      let trendRepos = [];
+      let activeWindow = 'daily';
+
+      const renderTrend = () => {
+        const mul = { daily: 1, weekly: 3, monthly: 7, yearly: 12 }[activeWindow] || 1;
+        const scored = trendRepos
+          .map(r => ({ r, s: (r.stargazers_count || 0) * mul + (r.forks_count || 0) }))
+          .sort((a, b) => b.s - a.s)
+          .slice(0, 10);
+        trendList.innerHTML = scored.map((o, i) => rankCard(o.r, i, Math.round(o.s))).join('');
+      };
+
+      document.querySelectorAll('.trending-tabs button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.trending-tabs button').forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          activeWindow = btn.dataset.window;
+          renderTrend();
+        });
+      });
+
+      (async () => {
+        trendLoading.hidden = false;
+        try {
+          const res = await fetch('https://api.github.com/search/repositories?q=stars:%3E50&sort=stars&order=desc&per_page=30', {
+            headers: { 'Accept': 'application/vnd.github+json' }
+          });
+          if (!res.ok) throw new Error('Could not load trending (HTTP ' + res.status + ').');
+          const data = await res.json();
+          trendRepos = data.items || [];
+          trendLoading.hidden = true;
+          renderTrend();
+        } catch (err) {
+          trendLoading.hidden = true;
+          trendError.textContent = err.message || 'Something went wrong.';
+          trendError.hidden = false;
+        }
+      })();
+    }
+
+    if (spikeList) {
+      (async () => {
+        spikeLoading.hidden = false;
+        try {
+          const res = await fetch('https://api.github.com/search/repositories?q=stars:%3E100&sort=stars&order=desc&per_page=30', {
+            headers: { 'Accept': 'application/vnd.github+json' }
+          });
+          if (!res.ok) throw new Error('Could not load spikes (HTTP ' + res.status + ').');
+          const data = await res.json();
+          const repos = (data.items || []).slice(0, 25);
+          const scored = repos
+            .map(r => ({ r, s: spikeScore(r) }))
+            .sort((a, b) => b.s - a.s)
+            .slice(0, 6);
+          spikeLoading.hidden = true;
+          spikeList.innerHTML = scored.map((o, i) => `
+            <div class="rank-card">
+              <div class="rank-num">${i + 1}</div>
+              <div>
+                <a class="rank-name" href="${safeUrl(o.r.html_url)}" target="_blank" rel="noopener">${esc(o.r.full_name)}</a>
+                <div class="rank-desc">${esc(o.r.description) || 'No description.'}</div>
+              </div>
+              <div class="rank-score">
+                <span class="spike-pill"><phosphor-icon name="trend-up" size="14"></phosphor-icon> ${Math.round(o.s)}</span>
+              </div>
+            </div>
+          `).join('');
+        } catch (err) {
+          spikeLoading.hidden = true;
+          spikeError.textContent = err.message || 'Something went wrong.';
+          spikeError.hidden = false;
+        }
+      })();
+    }
+
+        // Preloader — hide fast, never block content
+    var preloader = document.getElementById('preloader');
+    function hidePreloader() {
+      if (preloader) preloader.classList.add('hidden');
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(hidePreloader, 50); });
+    } else {
+      setTimeout(hidePreloader, 50);
+    }
+    setTimeout(hidePreloader, 800);
+    window.addEventListener('beforeunload', function () {
+      if (preloader) preloader.classList.remove('hidden');
+    });
+  </script>
+
+  <!-- Mobile Menu Script -->
+  <script>
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMobileMenu = document.getElementById('closeMobileMenu');
+
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+    if (closeMobileMenu) closeMobileMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+
+    // Close mobile menu when a link is clicked
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (mobileMenu.classList.contains('open')) {
+          mobileMenu.classList.remove('open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

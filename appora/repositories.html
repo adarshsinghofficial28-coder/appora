@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appora — Repositories</title>
+  <meta name="description" content="Fetch and explore public GitHub repositories in Appora's interface." />
+  <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.0.2/dist/phosphor.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-background">
+  <div class="preloader" id="preloader" role="status" aria-label="Loading Appora">
+    <div class="preloader-inner">
+      <div class="preloader-ring" aria-hidden="true"></div>
+      <span class="preloader-logo" aria-hidden="true"></span>
+      <span class="preloader-brand">Appora</span>
+      <span class="preloader-hint">Loading&hellip;</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="/home" class="logo" aria-label="Appora home">
+          <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+          <span class="font-extrabold text-xl text-foreground">Appora</span>
+        </a>
+        <nav class="main-nav" aria-label="Main">
+          <a href="/home" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Home</a>
+          <a href="/browse" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Browse</a>
+          <a href="/repositories" class="text-sm font-medium text-primary" aria-current="page"><phosphor-icon name="github-logo" size="16"></phosphor-icon> Repositories</a>
+          <a href="/pricing" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Pricing</a>
+        </nav>
+        <div class="header-actions">
+          <span class="auth-links" id="authLinks">
+            <a href="/login" class="btn-ghost text-sm">Sign In</a>
+            <a href="/signup" class="btn-primary text-sm">Get Started</a>
+          </span>
+          <span class="auth-user" id="authUser" hidden>
+            <a href="/dashboard" class="btn-ghost text-sm"><phosphor-icon name="user" size="16"></phosphor-icon> <span id="userName">Account</span></a>
+            <button class="btn-ghost text-sm" id="signOutBtn">Sign Out</button>
+          </span>
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+            <phosphor-icon name="list" size="24"></phosphor-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Main navigation">
+    <div class="mobile-menu-header">
+      <span class="font-bold text-lg">Appora</span>
+      <button class="icon-button" id="closeMobileMenu" aria-label="Close menu">
+        <phosphor-icon name="x" size="24"></phosphor-icon>
+      </button>
+    </div>
+    <div class="mobile-nav">
+      <a href="/home">Home</a>
+      <a href="/browse">Browse</a>
+      <a href="/repositories">Repositories</a>
+      <a href="/pricing">Pricing</a>
+      <hr style="border-color: var(--color-border); margin: 1rem 0;" />
+      <a href="/login" class="btn-secondary text-sm">Sign In</a>
+      <a href="/signup" class="btn-primary text-sm">Get Started</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="section" style="padding-top: 3rem;">
+      <div class="container">
+
+        <div class="repo-hero">
+          <h1>GitHub Repositories</h1>
+          <p>Enter any GitHub username to fetch and explore their public repositories — rendered in Appora's interface.</p>
+          <form class="repo-search-form" id="repoForm" role="search" aria-label="Fetch GitHub repositories">
+            <div class="search-bar">
+              <phosphor-icon name="github-logo" size="18" class="search-icon"></phosphor-icon>
+              <input type="text" id="repoUsername" placeholder="e.g. torvalds" aria-label="GitHub username" autocomplete="off" spellcheck="false" />
+            </div>
+            <button type="submit" class="btn-primary">Fetch Repositories</button>
+          </form>
+          <div class="repo-error" id="repoError" hidden></div>
+        </div>
+
+        <div class="repo-summary" id="repoSummary" hidden>
+          <span class="repo-pill"><phosphor-icon name="user" size="15"></phosphor-icon> <span id="repoOwnerName"></span></span>
+          <span class="repo-pill"><phosphor-icon name="repository" size="15"></phosphor-icon> <span id="repoCount"></span> repos</span>
+        </div>
+
+        <div class="repo-loading" id="repoLoading" hidden>
+          <phosphor-icon name="circle-notch" size="28" class="spin"></phosphor-icon>
+          <span>Fetching repositories&hellip;</span>
+        </div>
+
+        <div class="repo-empty" id="repoEmpty" hidden>
+          <phosphor-icon name="github-logo" size="44" style="color: var(--color-muted-foreground);"></phosphor-icon>
+          <h2 class="mt-3">No repositories yet</h2>
+          <p>Enter a GitHub username above to load their public repositories.</p>
+        </div>
+
+        <div class="repo-grid" id="repoGrid"></div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-card border-top" style="border-top: 1px solid var(--color-border);">
+    <div class="container" style="padding: 3rem 0;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+        <div>
+          <div class="logo" style="margin-bottom: 1rem;">
+            <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+            <span class="font-extrabold text-xl">Appora</span>
+          </div>
+          <p class="text-sm text-muted-foreground">Discover Apps. Find Your Tools.</p>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Product</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/home" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Home page">Home</a></li>
+            <li><a href="/browse" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Browse all apps">Browse</a></li>
+            <li><a href="/pricing" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="View pricing information">Pricing</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Company</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Sign in to your account">Login</a></li>
+            <li><a href="/dashboard" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="View your dashboard">Dashboard</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Support</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Help center documentation">Help Center</a></li>
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Contact support team">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="text-sm text-muted-foreground" style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);">
+        &copy; 2024 Appora. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script src="security.js"></script>
+  <script src="auth.js"></script>
+
+  <script>
+    const repoForm = document.getElementById('repoForm');
+    const repoUsername = document.getElementById('repoUsername');
+    const repoError = document.getElementById('repoError');
+    const repoLoading = document.getElementById('repoLoading');
+    const repoEmpty = document.getElementById('repoEmpty');
+    const repoGrid = document.getElementById('repoGrid');
+    const repoSummary = document.getElementById('repoSummary');
+    const repoOwnerName = document.getElementById('repoOwnerName');
+    const repoCount = document.getElementById('repoCount');
+
+    const LANG_COLORS = { JavaScript: '#f1e05a', TypeScript: '#3178c6', HTML: '#e34c26', CSS: '#563d7c', Python: '#3572A5', 'C++': '#f34b7d', C: '#555555', Java: '#b07219', Go: '#00ADD8', Rust: '#dea584', PHP: '#4F5D95', Shell: '#89e051', Ruby: '#701516', 'C#': '#178600', Kotlin: '#A97BFF', Swift: '#F05138', Dart: '#00B4AB', Vue: '#41b883', Jupyter: '#DA5B0B' };
+
+    function esc(v) {
+      return window.ApporaSecurity ? window.ApporaSecurity.sanitize(v) : (v == null ? '' : String(v));
+    }
+
+    function setError(msg) {
+      if (msg) { repoError.textContent = msg; repoError.hidden = false; }
+      else { repoError.textContent = ''; repoError.hidden = true; }
+    }
+
+    function formatCount(n) {
+      if (n == null) return '0';
+      return n >= 1000 ? (n / 1000).toFixed(1) + 'k' : String(n);
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      const n = new Date();
+      const days = Math.floor((n - d) / 86400000);
+      if (days < 1) return 'today';
+      if (days < 30) return days + 'd ago';
+      if (days < 365) return Math.floor(days / 30) + 'mo ago';
+      return Math.floor(days / 365) + 'y ago';
+    }
+
+    function renderRepos(repos) {
+      if (!repos.length) {
+        repoGrid.innerHTML = '';
+        repoEmpty.hidden = false;
+        return;
+      }
+      repoEmpty.hidden = true;
+      repoGrid.innerHTML = repos.map(r => {
+        const lang = r.language;
+        const langColor = LANG_COLORS[lang] || '#8b949e';
+        return `
+          <div class="repo-card">
+            <div class="repo-card-top">
+              <phosphor-icon name="repository" size="20" style="color: var(--color-primary); flex-shrink: 0;"></phosphor-icon>
+              <a class="repo-card-name" href="${esc(r.html_url)}" target="_blank" rel="noopener">${esc(r.name)}</a>
+              ${r.private ? '<span class="repo-private">Private</span>' : ''}
+            </div>
+            <p class="repo-desc">${esc(r.description) || 'No description provided.'}</p>
+            <div class="repo-meta">
+              ${lang ? `<span><span class="repo-lang-dot" style="background: ${langColor};"></span> ${esc(lang)}</span>` : ''}
+              <span><phosphor-icon name="star" size="15" weight="fill" style="color: #F59E0B;"></phosphor-icon> ${formatCount(r.stargazers_count)}</span>
+              <span><phosphor-icon name="fork" size="15"></phosphor-icon> ${formatCount(r.forks_count)}</span>
+              <span><phosphor-icon name="clock" size="15"></phosphor-icon> ${formatDate(r.updated_at)}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    if (repoForm) {
+      repoForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        setError('');
+        const user = repoUsername.value.trim();
+        if (!user) { setError('Please enter a GitHub username.'); return; }
+
+        repoGrid.innerHTML = '';
+        repoEmpty.hidden = true;
+        repoSummary.hidden = true;
+        repoLoading.hidden = false;
+
+        try {
+          const res = await fetch(`https://api.github.com/users/${encodeURIComponent(user)}/repos?sort=updated&per_page=100`, {
+            headers: { 'Accept': 'application/vnd.github+json' }
+          });
+          if (!res.ok) {
+            if (res.status === 404) throw new Error('That GitHub user was not found.');
+            if (res.status === 403) throw new Error('Rate limit hit — wait a minute and retry.');
+            throw new Error('Could not fetch repositories (HTTP ' + res.status + ').');
+          }
+          const repos = await res.json();
+          repoLoading.hidden = true;
+
+          repoOwnerName.textContent = '@' + esc(user);
+          repoCount.textContent = String(repos.length);
+          repoSummary.hidden = false;
+
+          renderRepos(repos);
+        } catch (err) {
+          repoLoading.hidden = true;
+          setError(err.message || 'Something went wrong.');
+        }
+      });
+    }
+
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMobileMenu = document.getElementById('closeMobileMenu');
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+    if (closeMobileMenu) closeMobileMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+    // Preloader — hide fast
+    var preloader = document.getElementById('preloader');
+    function hidePreloader() { if (preloader) preloader.classList.add('hidden'); }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(hidePreloader, 50); });
+    } else { setTimeout(hidePreloader, 50); }
+    setTimeout(hidePreloader, 800);
+  </script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appora — Browse Apps</title>
+  <meta name="description" content="Browse the Appora directory — filter by category, pricing, and search across apps." />
+  <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.0.2/dist/phosphor.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-background">
+    <div class="preloader" id="preloader" role="status" aria-label="Loading Appora">
+    <div class="preloader-inner">
+      <div class="preloader-ring" aria-hidden="true"></div>
+      <span class="preloader-logo" aria-hidden="true"></span>
+      <span class="preloader-brand">Appora</span>
+      <span class="preloader-hint">Loading&hellip;</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="/home" class="logo" aria-label="Appora home">
+          <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+          <span class="font-extrabold text-xl text-foreground">Appora</span>
+        </a>
+        <nav class="main-nav" aria-label="Main">
+          <a href="/home" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Home</a>
+          <a href="/browse" class="text-sm font-medium text-primary" aria-current="page">Browse</a>
+          <a href="/pricing" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Pricing</a>
+        </nav>
+        <div class="header-actions">
+          <span class="auth-links" id="authLinks">
+            <a href="/login" class="btn-ghost text-sm">Sign In</a>
+            <a href="/signup" class="btn-primary text-sm">Get Started</a>
+          </span>
+          <span class="auth-user" id="authUser" hidden>
+            <a href="/dashboard" class="btn-ghost text-sm"><phosphor-icon name="user" size="16"></phosphor-icon> <span id="userName">Account</span></a>
+            <button class="btn-ghost text-sm" id="signOutBtn">Sign Out</button>
+          </span>
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+            <phosphor-icon name="list" size="24"></phosphor-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Main navigation">
+    <div class="mobile-menu-header">
+      <span class="font-bold text-lg">Appora</span>
+      <button class="icon-button" id="closeMobileMenu" aria-label="Close menu">
+        <phosphor-icon name="x" size="24"></phosphor-icon>
+      </button>
+    </div>
+    <div class="mobile-nav">
+      <a href="/home">Home</a>
+      <a href="/browse">Browse</a>
+      <a href="/pricing">Pricing</a>
+      <hr style="border-color: var(--color-border); margin: 1rem 0;" />
+      <a href="/login" class="btn-secondary text-sm">Sign In</a>
+      <a href="/signup" class="btn-primary text-sm">Get Started</a>
+    </div>
+  </nav>
+
+  <main class="browse-premium">
+    <section class="section" style="padding-top: 3rem;">
+      <div class="container">
+
+        <div class="browse-hero">
+          <span class="browse-hero-eyebrow"><phosphor-icon name="sparkle" size="14"></phosphor-icon> The Appora directory</span>
+          <h1 class="browse-hero-title">Explore the directory</h1>
+          <p class="browse-hero-sub">Hand-picked software, filterable and ready to add to your workflow.</p>
+          <div class="browse-hero-stats">
+            <span><phosphor-icon name="grid-four" size="15"></phosphor-icon> Curated apps</span>
+            <span><phosphor-icon name="arrows-clockwise" size="15"></phosphor-icon> Updated regularly</span>
+            <span><phosphor-icon name="check-circle" size="15"></phosphor-icon> Free to browse</span>
+          </div>
+        </div>
+
+        <div class="browse-toolbar">
+          <div class="browse-controls">
+            <div class="search-bar" style="max-width: 320px;">
+              <phosphor-icon name="magnifying-glass" size="18" class="search-icon"></phosphor-icon>
+              <input type="search" placeholder="Search apps..." id="browseSearchInput" aria-label="Search apps" autocomplete="off" />
+            </div>
+            <label for="browseCategoryFilter" class="sr-only">Filter by category</label>
+            <div class="select-wrap">
+              <select class="filter-select" id="browseCategoryFilter" aria-label="Category filter">
+                <option value="">All Categories</option>
+                <option value="productivity">Productivity</option>
+                <option value="design">Design</option>
+                <option value="development">Development</option>
+                <option value="ai">AI & Machine Learning</option>
+                <option value="communication">Communication</option>
+                <option value="marketing">Marketing</option>
+              </select>
+              <phosphor-icon name="caret-down" size="14" class="select-chevron"></phosphor-icon>
+            </div>
+            <label for="browseTagFilter" class="sr-only">Filter by pricing</label>
+            <div class="select-wrap">
+              <select class="filter-select" id="browseTagFilter" aria-label="Pricing filter">
+                <option value="">All Pricing</option>
+                <option value="free">Free</option>
+                <option value="paid">Paid</option>
+                <option value="open-source">Open Source</option>
+              </select>
+              <phosphor-icon name="caret-down" size="14" class="select-chevron"></phosphor-icon>
+            </div>
+          </div>
+          <div class="browse-view-toggle" role="group" aria-label="View">
+            <button class="icon-button active" id="gridViewBtn" aria-pressed="true" data-view="grid" aria-label="Grid view">
+              <phosphor-icon name="grid-four" size="20"></phosphor-icon>
+            </button>
+            <button class="icon-button" id="listViewBtn" aria-pressed="false" data-view="list" aria-label="List view">
+              <phosphor-icon name="list" size="20"></phosphor-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="browse-grid-head">
+          <h2>Apps</h2>
+          <span class="browse-count" id="browseCount" aria-live="polite"></span>
+        </div>
+
+        <div class="apps-grid" id="browseGrid"></div>
+
+        <div class="empty-state" id="browseEmpty" hidden>
+          <phosphor-icon name="magnifying-glass" size="44" style="color: var(--color-muted-foreground);"></phosphor-icon>
+          <h2>No apps found</h2>
+          <p>Try adjusting your search or filters.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-card border-top" style="border-top: 1px solid var(--color-border);">
+    <div class="container" style="padding: 3rem 0;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+        <div>
+          <div class="logo" style="margin-bottom: 1rem;">
+            <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+            <span class="font-extrabold text-xl">Appora</span>
+          </div>
+          <p class="text-sm text-muted-foreground">
+            Discover Apps. Find Your Tools.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Product</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/home" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Home page">Home</a></li>
+            <li><a href="/browse" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Browse all apps">Browse</a></li>
+            <li><a href="/pricing" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="View pricing information">Pricing</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Company</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Sign in to your account">Login</a></li>
+            <li><a href="/dashboard" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="View your dashboard">Dashboard</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-foreground mb-3">Support</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Help center documentation">Help Center</a></li>
+            <li><a href="/login" class="text-sm text-muted-foreground hover:text-primary transition" aria-label="Contact support team">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="text-sm text-muted-foreground" style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);">
+        &copy; 2024 Appora. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script src="security.js"></script>
+  <script src="auth.js"></script>
+
+  <script>
+    const STORAGE_KEY = 'appora_apps';
+    const defaultApps = [
+      { id: 1, name: 'Linear', desc: 'Track and ship work across the software development life cycle.', rating: 4.8, category: 'Productivity', pricing: 'paid', tag: 'paid', platforms: ['web'], status: 'live' },
+      { id: 2, name: 'Figma', desc: 'Design, prototype, and share user experiences faster.', rating: 4.7, category: 'Design', pricing: 'free', tag: 'free', platforms: ['web'], status: 'live' },
+      { id: 3, name: 'Cursor', desc: 'The IDE built for pair-programming with AI.', rating: 4.9, category: 'Development', pricing: 'paid', tag: 'paid', platforms: ['mac', 'win', 'linux'], status: 'live' },
+      { id: 4, name: 'Notion', desc: 'One workspace for writing, planning, and organizing.', rating: 4.6, category: 'Productivity', pricing: 'free', tag: 'free', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 5, name: 'Postman', desc: 'API development and testing platform.', rating: 4.5, category: 'Development', pricing: 'paid', tag: 'paid', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 6, name: 'Framer', desc: 'Interactive web design tool with AI assistance.', rating: 4.3, category: 'Design', pricing: 'free', tag: 'free', platforms: ['web'], status: 'live' },
+      { id: 7, name: 'Replit', desc: 'Collaborative browser-based IDE.', rating: 4.4, category: 'Development', pricing: 'open-source', tag: 'open-source', platforms: ['web'], status: 'live' },
+      { id: 8, name: 'Discord', desc: 'Chat platform for communities and teams.', rating: 4.2, category: 'Communication', pricing: 'free', tag: 'free', platforms: ['web', 'mac', 'win', 'ios', 'android'], status: 'live' },
+      { id: 9, name: 'Trello', desc: 'Visual board-based project management tool.', rating: 4.1, category: 'Productivity', pricing: 'free', tag: 'free', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 10, name: 'Canva', desc: 'Create stunning designs for social media and print.', rating: 4.4, category: 'Design', pricing: 'free', tag: 'free', platforms: ['web', 'mac', 'win'], status: 'live' },
+      { id: 11, name: 'GitHub Copilot', desc: 'AI pair programmer for faster coding.', rating: 4.6, category: 'Development', pricing: 'paid', tag: 'paid', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 12, name: 'Slack', desc: 'Team collaboration and messaging platform.', rating: 4.3, category: 'Communication', pricing: 'paid', tag: 'paid', platforms: ['web', 'mac', 'win', 'linux'], status: 'live' },
+      { id: 13, name: 'Zoom', desc: 'Video conferencing and online meetings.', rating: 4.0, category: 'Communication', pricing: 'free', tag: 'free', platforms: ['web', 'mac', 'win', 'ios', 'android'], status: 'live' },
+      { id: 14, name: 'Mailchimp', desc: 'Email marketing and automation platform.', rating: 4.0, category: 'Marketing', pricing: 'paid', tag: 'paid', platforms: ['web'], status: 'live' },
+      { id: 15, name: 'HubSpot', desc: 'CRM and inbound marketing software.', rating: 4.5, category: 'Marketing', pricing: 'paid', tag: 'paid', platforms: ['web'], status: 'live' },
+    ];
+
+    const storedApps = localStorage.getItem(STORAGE_KEY);
+    let allApps = (storedApps && JSON.parse(storedApps).length > 0) ? JSON.parse(storedApps) : defaultApps;
+
+    allApps = allApps.map(app => ({
+      tag: app.pricing || app.tag || 'free',
+      platforms: app.platforms || ['web'],
+      status: app.status || 'live',
+      ...app
+    }));
+
+    const iconColors = ['bg-indigo', 'bg-emerald', 'bg-amber', 'bg-rose', 'bg-blue', 'bg-purple', 'bg-teal', 'bg-orange'];
+
+    function getIconColor(name) {
+      let h = 0;
+      for (let i = 0; i < name.length; i++) {
+        h = ((h << 5) - h) + name.charCodeAt(i);
+        h |= 0;
+      }
+      return iconColors[Math.abs(h) % iconColors.length];
+    }
+
+    function getPlatformIcons(platforms) {
+      const map = { web: 'web', mac: 'apple', win: 'windows', linux: 'terminal', ios: 'iphone', android: 'android' };
+      return (platforms || []).map(p => `<phosphor-icon name="${map[p] || 'web'}" size="14" style="color: var(--color-muted-foreground);"></phosphor-icon>`).join('');
+    }
+
+    const detailHref = (app) => `/app/${encodeURIComponent(app.name)}`;
+
+    function generateGridCard(app) {
+      const tagClass = app.tag === 'free' ? 'free' : app.tag === 'paid' ? 'paid' : 'open-source';
+      const tagName = app.tag === 'free' ? 'Free' : app.tag === 'paid' ? 'Paid' : 'Open Source';
+      const ratingStr = app.rating !== undefined ? app.rating.toFixed(1) : '';
+      const esc = (v) => window.ApporaSecurity ? window.ApporaSecurity.sanitize(v) : (v || '');
+      const logo = window.ApporaSecurity ? window.ApporaSecurity.safeUrl(app.logo) : '';
+      const iconInner = logo ? `<img src="${logo}" alt="${esc(app.name)} logo" />` : esc(app.name).charAt(0);
+      const cat = esc(app.category);
+      return `
+        <div class="app-card" role="link" tabindex="0" onclick="location.href='${detailHref(app)}'" onkeydown="if(event.key==='Enter')location.href='${detailHref(app)}'">
+          <div class="app-card-head">
+            <div class="app-icon ${getIconColor(app.name)}">${iconInner}</div>
+            <div class="app-card-titlewrap">
+              <h3 class="app-card-name">${esc(app.name)}</h3>
+              ${cat ? `<span class="app-card-cat">${cat}</span>` : ''}
+            </div>
+            ${ratingStr ? `<span class="app-card-rating"><phosphor-icon name="star" size="13" weight="fill" style="color: #F59E0B;"></phosphor-icon> ${ratingStr}</span>` : ''}
+          </div>
+          <p class="app-card-desc">${esc(app.desc)}</p>
+          <div class="app-card-foot">
+            <span class="price-badge ${tagClass}">${tagName}</span>
+            <div class="platform-pill">${getPlatformIcons(app.platforms)}</div>
+          </div>
+          <button class="bookmark-btn" onclick="event.stopPropagation(); toggleBookmark(this)" aria-label="Bookmark">
+            <phosphor-icon name="bookmark" size="18"></phosphor-icon>
+          </button>
+        </div>
+      `;
+    }
+
+    function generateListCard(app) {
+      const tagClass = app.tag === 'free' ? 'free' : app.tag === 'paid' ? 'paid' : 'open-source';
+      const tagName = app.tag === 'free' ? 'Free' : app.tag === 'paid' ? 'Paid' : 'Open Source';
+      const ratingStr = app.rating !== undefined ? app.rating.toFixed(1) : '';
+      const esc = (v) => window.ApporaSecurity ? window.ApporaSecurity.sanitize(v) : (v || '');
+      const logo = window.ApporaSecurity ? window.ApporaSecurity.safeUrl(app.logo) : '';
+      const iconInner = logo ? `<img src="${logo}" alt="${esc(app.name)} logo" />` : esc(app.name).charAt(0);
+      return `
+        <div class="list-card" role="link" tabindex="0" onclick="location.href='${detailHref(app)}'" onkeydown="if(event.key==='Enter')location.href='${detailHref(app)}'">
+          <div class="app-icon ${getIconColor(app.name)}">${iconInner}</div>
+          <div class="list-card-body">
+            <div class="list-card-title">${esc(app.name)}</div>
+            <div class="list-card-desc">${esc(app.desc)}</div>
+            <div class="list-card-meta">
+              <span class="price-badge ${tagClass}">${tagName}</span>
+              <div class="platform-pill">${getPlatformIcons(app.platforms)}</div>
+              ${ratingStr ? `<div class="platform-pill"><phosphor-icon name="star" size="14" weight="fill" style="color: #F59E0B;"></phosphor-icon> ${ratingStr}</div>` : ''}
+            </div>
+          </div>
+          <button class="bookmark-btn" onclick="event.stopPropagation(); toggleBookmark(this)" aria-label="Bookmark">
+            <phosphor-icon name="bookmark" size="18"></phosphor-icon>
+          </button>
+        </div>
+      `;
+    }
+
+    function toggleBookmark(btn) {
+      btn.classList.toggle('bookmarked');
+      const icon = btn.querySelector('phosphor-icon');
+      icon.setAttribute('name', btn.classList.contains('bookmarked') ? 'bookmark-simple' : 'bookmark');
+      icon.setAttribute('weight', btn.classList.contains('bookmarked') ? 'fill' : 'regular');
+      showToast(btn.classList.contains('bookmarked') ? 'Bookmarked!' : 'Removed bookmark');
+    }
+
+    const grid = document.getElementById('browseGrid');
+    const empty = document.getElementById('browseEmpty');
+    const count = document.getElementById('browseCount');
+    const catFilter = document.getElementById('browseCategoryFilter');
+    const tagFilter = document.getElementById('browseTagFilter');
+    const searchInput = document.getElementById('browseSearchInput');
+    const gridViewBtn = document.getElementById('gridViewBtn');
+    const listViewBtn = document.getElementById('listViewBtn');
+
+    let currentView = 'grid';
+
+    function setView(view) {
+      currentView = view;
+      const isGrid = view === 'grid';
+      gridViewBtn.classList.toggle('active', isGrid);
+      listViewBtn.classList.toggle('active', !isGrid);
+      gridViewBtn.setAttribute('aria-pressed', String(isGrid));
+      listViewBtn.setAttribute('aria-pressed', String(!isGrid));
+      render();
+    }
+
+    gridViewBtn.addEventListener('click', () => setView('grid'));
+    listViewBtn.addEventListener('click', () => setView('list'));
+
+    function render() {
+      const q = searchInput.value.trim().toLowerCase();
+      const c = catFilter.value;
+      const t = tagFilter.value;
+
+      const filtered = allApps.filter(a => {
+        if (a.status !== 'live') return false;
+        const matchesQ = !q ||
+          (a.name || '').toLowerCase().includes(q) ||
+          (a.desc || '').toLowerCase().includes(q) ||
+          (a.category || '').toLowerCase().includes(q);
+        const matchesC = !c || (a.category || '').toLowerCase() === c;
+        const matchesT = !t || a.tag === t;
+        return matchesQ && matchesC && matchesT;
+      });
+
+      grid.className = currentView === 'grid' ? 'apps-grid' : 'apps-list';
+      grid.innerHTML = filtered.map(currentView === 'grid' ? generateGridCard : generateListCard).join('');
+      empty.hidden = filtered.length > 0;
+      count.textContent = `${filtered.length} app${filtered.length === 1 ? '' : 's'} found`;
+    }
+
+    [catFilter, tagFilter, searchInput].forEach(el => el.addEventListener('input', render));
+    render();
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      if (t) {
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+      }
+    }
+
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMobileMenu = document.getElementById('closeMobileMenu');
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+    if (closeMobileMenu) closeMobileMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+        // Preloader — hide fast, never block content
+    var preloader = document.getElementById('preloader');
+    function hidePreloader() {
+      if (preloader) preloader.classList.add('hidden');
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(hidePreloader, 50); });
+    } else {
+      setTimeout(hidePreloader, 50);
+    }
+    setTimeout(hidePreloader, 800);
+    window.addEventListener('beforeunload', function () {
+      if (preloader) preloader.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

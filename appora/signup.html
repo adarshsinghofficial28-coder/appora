@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appora — Create Account</title>
+  <meta name="description" content="Sign up for Appora to save bookmarks, leave reviews, and submit apps." />
+  <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.0.2/dist/phosphor.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-background auth-page">
+    <div class="preloader" id="preloader" role="status" aria-label="Loading Appora">
+    <div class="preloader-inner">
+      <div class="preloader-ring" aria-hidden="true"></div>
+      <span class="preloader-logo" aria-hidden="true"></span>
+      <span class="preloader-brand">Appora</span>
+      <span class="preloader-hint">Loading&hellip;</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="/home" class="logo" aria-label="Appora home">
+          <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+          <span class="font-extrabold text-xl text-foreground">Appora</span>
+        </a>
+        <nav class="main-nav" aria-label="Main">
+          <a href="/home" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Home</a>
+          <a href="/browse" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Browse</a>
+          <a href="/pricing" class="text-sm font-medium text-muted-foreground hover:text-primary transition">Pricing</a>
+        </nav>
+        <div class="header-actions">
+          <a href="/login" class="btn-ghost text-sm">Sign In</a>
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+            <phosphor-icon name="list" size="24"></phosphor-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Main navigation">
+    <div class="mobile-menu-header">
+      <span class="font-bold text-lg">Appora</span>
+      <button class="icon-button" id="closeMobileMenu" aria-label="Close menu">
+        <phosphor-icon name="x" size="24"></phosphor-icon>
+      </button>
+    </div>
+    <div class="mobile-nav">
+      <a href="/home">Home</a>
+      <a href="/browse">Browse</a>
+      <a href="/pricing">Pricing</a>
+      <hr style="border-color: var(--color-border); margin: 1rem 0;" />
+      <a href="/login" class="btn-secondary text-sm">Sign In</a>
+      <a href="/signup" class="btn-primary text-sm">Get Started</a>
+    </div>
+  </nav>
+
+  <main class="auth-main">
+    <div class="container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1>Create Account</h1>
+          <p class="text-sm text-muted-foreground">Sign up to save bookmarks, leave reviews, and submit apps.</p>
+        </div>
+
+        <div class="form-error-summary" id="formErrorSummary" role="alert" hidden>
+          <phosphor-icon name="warning-circle" size="18"></phosphor-icon>
+          <span id="formErrorSummaryText">Please fix the errors below.</span>
+        </div>
+
+        <form class="auth-form" id="signupForm" novalidate>
+          <div class="form-group" aria-hidden="true" style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;">
+            <label for="trap">Website</label>
+            <input type="text" id="trap" name="website" data-honeypot="1" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Jane Smith" autocomplete="name" />
+            <div class="field-error" id="nameError" role="alert"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" />
+            <div class="field-error" id="emailError" role="alert"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-wrap">
+              <input type="password" id="password" name="password" placeholder="At least 8 characters" autocomplete="new-password" />
+              <button type="button" class="password-toggle" id="passwordToggle" aria-label="Show password" aria-pressed="false">
+                <phosphor-icon name="eye" size="20"></phosphor-icon>
+              </button>
+            </div>
+            <div class="field-error" id="passwordError" role="alert"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="passwordConfirm">Confirm Password</label>
+            <div class="password-wrap">
+              <input type="password" id="passwordConfirm" name="passwordConfirm" placeholder="Confirm your password" autocomplete="new-password" />
+              <button type="button" class="password-toggle" id="confirmToggle" aria-label="Show password" aria-pressed="false">
+                <phosphor-icon name="eye" size="20"></phosphor-icon>
+              </button>
+            </div>
+            <div class="field-error" id="confirmError" role="alert"></div>
+          </div>
+
+          <button type="submit" class="btn-primary">Create Account</button>
+        </form>
+
+        <div class="auth-footer" style="margin-top: 1.5rem; border-top: 1px solid var(--color-border); padding-top: 1.25rem; border-bottom: 1px solid var(--color-border); padding-bottom: 1.25rem;">
+          Already have an account? <a href="/login">Sign In</a>
+        </div>
+
+        <div class="auth-footer" style="margin-top: 1.25rem; border-top: none; padding-top: 0;">
+          <p class="text-xs text-muted-foreground" style="line-height: 1.5;">
+            By signing up, you agree to our
+            <a href="/login">Terms</a> and
+            <a href="/login">Privacy Policy</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-card border-top" style="border-top: 1px solid var(--color-border);">
+    <div class="container" style="padding: 2rem 0; text-align: center;">
+      <p class="text-sm text-muted-foreground">&copy; 2024 Appora. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script src="security.js"></script>
+  <script src="auth.js"></script>
+
+  <script>
+    const form = document.getElementById('signupForm');
+    const summary = document.getElementById('formErrorSummary');
+    const summaryText = document.getElementById('formErrorSummaryText');
+
+    function setFieldError(inputId, errorId, message) {
+      const input = document.getElementById(inputId);
+      const err = document.getElementById(errorId);
+      if (input) input.classList.toggle('input-error', !!message);
+      if (err) err.textContent = message || '';
+    }
+
+    function clearErrors() {
+      setFieldError('name', 'nameError', '');
+      setFieldError('email', 'emailError', '');
+      setFieldError('password', 'passwordError', '');
+      setFieldError('passwordConfirm', 'confirmError', '');
+      summary.hidden = true;
+    }
+
+    function showSummary(message) {
+      summaryText.textContent = message;
+      summary.hidden = false;
+      summary.focus();
+    }
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (window.ApporaSecurity && window.ApporaSecurity.isBot(form)) {
+          return;
+        }
+
+        clearErrors();
+
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirm = document.getElementById('passwordConfirm').value;
+
+        const errors = [];
+
+        if (!name) {
+          setFieldError('name', 'nameError', 'Please enter your full name.');
+          errors.push('name');
+        }
+        if (!email) {
+          setFieldError('email', 'emailError', 'Please enter your email address.');
+          errors.push('email');
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          setFieldError('email', 'emailError', 'Please enter a valid email address.');
+          errors.push('email');
+        }
+        if (!password) {
+          setFieldError('password', 'passwordError', 'Please choose a password.');
+          errors.push('password');
+        } else if (password.length < 8) {
+          setFieldError('password', 'passwordError', 'Password must be at least 8 characters.');
+          errors.push('password');
+        }
+        if (!confirm) {
+          setFieldError('passwordConfirm', 'confirmError', 'Please confirm your password.');
+          errors.push('confirm');
+        } else if (password && confirm !== password) {
+          setFieldError('passwordConfirm', 'confirmError', 'Passwords do not match.');
+          errors.push('confirm');
+        }
+
+        if (errors.length) {
+          showSummary('Please fix the highlighted fields and try again.');
+          return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('appora_users')) || [];
+        const lowerEmail = email.toLowerCase();
+        if (users.some(u => u.email.toLowerCase() === lowerEmail)) {
+          setFieldError('email', 'emailError', 'This email is already registered.');
+          showSummary('This email is already registered. Try signing in instead.');
+          return;
+        }
+
+        const hashed = window.ApporaSecurity ? await window.ApporaSecurity.hashPassword(password) : password;
+        const newUser = { id: Date.now(), name, email: lowerEmail, password: hashed };
+        users.push(newUser);
+        localStorage.setItem('appora_users', JSON.stringify(users));
+        ApporaAuth.setSession({ id: newUser.id, name: newUser.name, email: newUser.email });
+        showToast('Account created successfully!');
+        window.location.href = '/dashboard';
+      });
+    }
+
+    function setupPasswordToggle(toggleId, inputId) {
+      const toggle = document.getElementById(toggleId);
+      const input = document.getElementById(inputId);
+      if (!toggle || !input) return;
+      toggle.addEventListener('click', () => {
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        toggle.setAttribute('aria-pressed', String(show));
+        const icon = toggle.querySelector('phosphor-icon');
+        icon.setAttribute('name', show ? 'eye-slash' : 'eye');
+      });
+    }
+
+    setupPasswordToggle('passwordToggle', 'password');
+    setupPasswordToggle('confirmToggle', 'passwordConfirm');
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      if (t) {
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+      }
+    }
+
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMobileMenu = document.getElementById('closeMobileMenu');
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+    if (closeMobileMenu) closeMobileMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+        // Preloader — hide fast, never block content
+    var preloader = document.getElementById('preloader');
+    function hidePreloader() {
+      if (preloader) preloader.classList.add('hidden');
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(hidePreloader, 50); });
+    } else {
+      setTimeout(hidePreloader, 50);
+    }
+    setTimeout(hidePreloader, 800);
+    window.addEventListener('beforeunload', function () {
+      if (preloader) preloader.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

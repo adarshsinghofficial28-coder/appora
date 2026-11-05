@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appora — Login</title>
+  <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.0.2/dist/phosphor.js" defer></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-background">
+    <div class="preloader" id="preloader" role="status" aria-label="Loading Appora">
+    <div class="preloader-inner">
+      <div class="preloader-ring" aria-hidden="true"></div>
+      <span class="preloader-logo" aria-hidden="true"></span>
+      <span class="preloader-brand">Appora</span>
+      <span class="preloader-hint">Loading&hellip;</span>
+    </div>
+  </div>
+
+  <main class="section" style="padding: 4rem 0; min-height: calc(100vh - 120px);">
+    <div class="container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="logo" style="justify-content: center; margin-bottom: 1rem;">
+            <span class="logo-mark" role="img" aria-label="Appora logo"></span>
+            <span class="font-extrabold text-xl">Appora</span>
+          </div>
+          <h1>Welcome Back</h1>
+          <p class="text-sm text-muted-foreground">Sign in to access your saved apps and bookmarks.</p>
+        </div>
+        <form class="auth-form" id="loginForm">
+          <div class="form-group" aria-hidden="true" style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;">
+            <label for="trap">Website</label>
+            <input type="text" id="trap" name="website" data-honeypot="1" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="••••••••" required />
+          </div>
+          <div class="field-error" id="loginRateError" role="alert" hidden></div>
+          <button type="submit" class="btn-primary">Sign In</button>
+        </form>
+        <div class="auth-footer">
+          <a href="/dashboard">Forgot password?</a>
+        </div>
+        <div class="auth-footer" style="margin-top: 0; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+          Don't have an account? <a href="/login">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script src="security.js"></script>
+  <script src="auth.js"></script>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const rateError = document.getElementById('loginRateError');
+
+    function setRateError(msg) {
+      if (!rateError) return;
+      if (msg) {
+        rateError.textContent = msg;
+        rateError.hidden = false;
+      } else {
+        rateError.textContent = '';
+        rateError.hidden = true;
+      }
+    }
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // 1. Honeypot — silently ignore bots.
+        if (window.ApporaSecurity && window.ApporaSecurity.isBot(form)) {
+          return;
+        }
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const identity = email.toLowerCase();
+
+        // 2. Rate limit / lockout.
+        if (window.ApporaSecurity) {
+          const lock = window.ApporaSecurity.getLockStatus(identity);
+          if (lock.locked) {
+            const secs = Math.ceil(lock.waitMs / 1000);
+            setRateError(`Too many attempts. Try again in ${secs}s.`);
+            return;
+          }
+          setRateError('');
+        }
+
+        let users = JSON.parse(localStorage.getItem('appora_users')) || [];
+        const user = users.find(u => u.email.toLowerCase() === identity);
+        let ok = false;
+
+        if (user) {
+          const stored = user.password;
+          if (window.ApporaSecurity && window.ApporaSecurity.isHashed(stored)) {
+            const attemptHash = await window.ApporaSecurity.hashPassword(password);
+            ok = attemptHash === stored;
+          } else {
+            // Legacy plaintext stored value — verify then upgrade in place.
+            ok = stored === password;
+            if (ok) {
+              const hashed = await window.ApporaSecurity.hashPassword(password);
+              user.password = hashed;
+              localStorage.setItem('appora_users', JSON.stringify(users));
+            }
+          }
+        }
+
+        if (window.ApporaSecurity) {
+          window.ApporaSecurity.recordAttempt(identity, ok);
+        }
+
+        if (ok) {
+          ApporaAuth.setSession({ id: user.id, name: user.name, email: user.email });
+          showToast('Login successful!');
+          window.location.href = '/dashboard';
+        } else {
+          showToast('Invalid email or password.');
+        }
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      if (t) {
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+      }
+    }
+
+        // Preloader — hide fast, never block content
+    var preloader = document.getElementById('preloader');
+    function hidePreloader() {
+      if (preloader) preloader.classList.add('hidden');
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(hidePreloader, 50); });
+    } else {
+      setTimeout(hidePreloader, 50);
+    }
+    setTimeout(hidePreloader, 800);
+    window.addEventListener('beforeunload', function () {
+      if (preloader) preloader.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
